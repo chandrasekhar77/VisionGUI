@@ -5,42 +5,36 @@
 #include "pch.h"
 #include "framework.h"
 #include "VisionGUI.h"
-
 #include "MainFrm.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
-// CMainFrame
-
 IMPLEMENT_DYNAMIC(CMainFrame, CFrameWndEx)
 
-BEGIN_MESSAGE_MAP(CMainFrame, CFrameWnd)
+BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_WM_CREATE()
 	ON_WM_SETFOCUS()
 	ON_WM_NCCALCSIZE()
 	ON_WM_NCHITTEST()
+	ON_MESSAGE(Theme::WM_NAV_CHANGED, &CMainFrame::OnNavChanged)
 END_MESSAGE_MAP()
 
 static UINT indicators[] =
 {
-	ID_SEPARATOR,           // status line indicator
+	ID_SEPARATOR,
 	ID_INDICATOR_CAPS,
 	ID_INDICATOR_NUM,
 	ID_INDICATOR_SCRL,
 };
 
-// CMainFrame construction/destruction
+CMainFrame::CMainFrame() noexcept {}
+CMainFrame::~CMainFrame() {}
 
-CMainFrame::CMainFrame() noexcept
-{
-	// TODO: add member initialization code here
-}
-
-CMainFrame::~CMainFrame()
-{
-}
+// ---------------------------------------------------------------------------
+// Creation
+// ---------------------------------------------------------------------------
 
 int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 {
@@ -49,18 +43,31 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	SetMenu(nullptr);
 
-	if (!m_wndView.Create(nullptr, nullptr, AFX_WS_DEFAULT_VIEW, CRect(0, 0, 0, 0), this, AFX_IDW_PANE_FIRST, nullptr))
+	// Primary view — auto-sized by the frame layout engine
+	if (!m_wndView.Create(nullptr, nullptr, AFX_WS_DEFAULT_VIEW,
+		CRect(0, 0, 0, 0), this, AFX_IDW_PANE_FIRST, nullptr))
 	{
-		TRACE0("Failed to create view window\n");
+		TRACE0("Failed to create monitoring view\n");
 		return -1;
 	}
+
+	// Secondary views — manually kept in sync with the primary view via RecalcLayout
+	m_wndResultsView.Create(_T("Results View"),  this, ID_VIEW_RESULTS);
+	m_wndRecipeView .Create(_T("Recipe View"),   this, ID_VIEW_RECIPE);
+	m_wndStatsView  .Create(_T("Statistics"),    this, ID_VIEW_STATS);
+	m_wndConfigView .Create(_T("Configuration"), this, ID_VIEW_CONFIG);
+	// All secondary views start hidden; monitoring view is the default
+	m_wndResultsView.ShowWindow(SW_HIDE);
+	m_wndRecipeView .ShowWindow(SW_HIDE);
+	m_wndStatsView  .ShowWindow(SW_HIDE);
+	m_wndConfigView .ShowWindow(SW_HIDE);
 
 	if (!m_wndStatusBar.Create(this))
 	{
 		TRACE0("Failed to create status bar\n");
 		return -1;
 	}
-	m_wndStatusBar.SetIndicators(indicators, sizeof(indicators)/sizeof(UINT));
+	m_wndStatusBar.SetIndicators(indicators, sizeof(indicators) / sizeof(UINT));
 
 	// Docking
 	EnableDocking(CBRS_ALIGN_ANY);
@@ -88,11 +95,9 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	BOOL darkMode = TRUE;
 	::DwmSetWindowAttribute(m_hWnd, DWMWA_USE_IMMERSIVE_DARK_MODE, &darkMode, sizeof(darkMode));
 
-	// Preserve DWM drop shadow on frameless window
 	MARGINS margins = { 1, 1, 1, 1 };
 	::DwmExtendFrameIntoClientArea(m_hWnd, &margins);
 
-	// Trigger NC recalculation so the frame has no chrome
 	SetWindowPos(nullptr, 0, 0, 0, 0,
 		SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
 
@@ -103,34 +108,64 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 {
 	if (!CFrameWndEx::PreCreateWindow(cs))
 		return FALSE;
-	// TODO: Modify the Window class or styles here by modifying
-	//  the CREATESTRUCT cs
 
 	cs.dwExStyle &= ~WS_EX_CLIENTEDGE;
 	cs.lpszClass = AfxRegisterWndClass(0);
 	return TRUE;
 }
 
-// CMainFrame diagnostics
+// ---------------------------------------------------------------------------
+// Layout — keep secondary views co-located with the primary view
+// ---------------------------------------------------------------------------
+
+void CMainFrame::RecalcLayout(BOOL bNotify)
+{
+	CFrameWndEx::RecalcLayout(bNotify);
+
+	CWnd* pPrimary = GetDlgItem(AFX_IDW_PANE_FIRST);
+	if (!pPrimary || !pPrimary->m_hWnd) return;
+
+	CRect rc;
+	pPrimary->GetWindowRect(&rc);
+	ScreenToClient(&rc);
+
+	auto refit = [&](CWnd& w) { if (w.m_hWnd) w.MoveWindow(&rc, FALSE); };
+	refit(m_wndResultsView);
+	refit(m_wndRecipeView);
+	refit(m_wndStatsView);
+	refit(m_wndConfigView);
+}
+
+// ---------------------------------------------------------------------------
+// View switching
+// ---------------------------------------------------------------------------
+
+void CMainFrame::ShowView(Theme::NavView view)
+{
+	m_wndView       .ShowWindow(view == Theme::VIEW_MONITORING ? SW_SHOW : SW_HIDE);
+	m_wndResultsView.ShowWindow(view == Theme::VIEW_RESULTS    ? SW_SHOW : SW_HIDE);
+	m_wndRecipeView .ShowWindow(view == Theme::VIEW_RECIPE     ? SW_SHOW : SW_HIDE);
+	m_wndStatsView  .ShowWindow(view == Theme::VIEW_STATS      ? SW_SHOW : SW_HIDE);
+	m_wndConfigView .ShowWindow(view == Theme::VIEW_CONFIG     ? SW_SHOW : SW_HIDE);
+}
+
+LRESULT CMainFrame::OnNavChanged(WPARAM wParam, LPARAM /*lParam*/)
+{
+	ShowView(static_cast<Theme::NavView>(wParam));
+	return 0;
+}
+
+// ---------------------------------------------------------------------------
+// Diagnostics / misc
+// ---------------------------------------------------------------------------
 
 #ifdef _DEBUG
-void CMainFrame::AssertValid() const
-{
-	CFrameWndEx::AssertValid();
-}
-
-void CMainFrame::Dump(CDumpContext& dc) const
-{
-	CFrameWndEx::Dump(dc);
-}
-#endif //_DEBUG
-
-
-// CMainFrame message handlers
+void CMainFrame::AssertValid() const { CFrameWndEx::AssertValid(); }
+void CMainFrame::Dump(CDumpContext& dc) const { CFrameWndEx::Dump(dc); }
+#endif
 
 void CMainFrame::OnSetFocus(CWnd* /*pOldWnd*/)
 {
-	// forward focus to the view window
 	m_wndView.SetFocus();
 }
 
@@ -143,10 +178,8 @@ BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO*
 
 void CMainFrame::OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS* lpncsp)
 {
-	if (!bCalcValidRects)
-		return;
+	if (!bCalcValidRects) return;
 
-	// When maximized, constrain to the monitor work area to avoid overscan
 	if (IsZoomed())
 	{
 		HMONITOR hMon = MonitorFromWindow(m_hWnd, MONITOR_DEFAULTTONEAREST);
@@ -154,7 +187,6 @@ void CMainFrame::OnNcCalcSize(BOOL bCalcValidRects, NCCALCSIZE_PARAMS* lpncsp)
 		GetMonitorInfo(hMon, &mi);
 		lpncsp->rgrc[0] = mi.rcWork;
 	}
-	// Return without calling base — entire window rect becomes client area
 }
 
 LRESULT CMainFrame::OnNcHitTest(CPoint point)
@@ -162,21 +194,19 @@ LRESULT CMainFrame::OnNcHitTest(CPoint point)
 	CRect wr;
 	GetWindowRect(&wr);
 
-	// Resize borders when not maximized
 	if (!IsZoomed())
 	{
 		const int b = 4;
-		if (point.x <= wr.left + b  && point.y <= wr.top + b)     return HTTOPLEFT;
-		if (point.x >= wr.right - b && point.y <= wr.top + b)     return HTTOPRIGHT;
-		if (point.x <= wr.left + b  && point.y >= wr.bottom - b)  return HTBOTTOMLEFT;
-		if (point.x >= wr.right - b && point.y >= wr.bottom - b)  return HTBOTTOMRIGHT;
+		if (point.x <= wr.left + b  && point.y <= wr.top + b)    return HTTOPLEFT;
+		if (point.x >= wr.right - b && point.y <= wr.top + b)    return HTTOPRIGHT;
+		if (point.x <= wr.left + b  && point.y >= wr.bottom - b) return HTBOTTOMLEFT;
+		if (point.x >= wr.right - b && point.y >= wr.bottom - b) return HTBOTTOMRIGHT;
 		if (point.x <= wr.left + b)  return HTLEFT;
 		if (point.x >= wr.right - b) return HTRIGHT;
 		if (point.y <= wr.top + b)   return HTTOP;
 		if (point.y >= wr.bottom - b) return HTBOTTOM;
 	}
 
-	// Middle of the top bar (between nav buttons and action/window buttons) is draggable
 	if (point.y < wr.top + Theme::TOP_BAR_H)
 	{
 		int navEnd   = wr.left + Theme::NAV_BTN_W * Theme::NAV_COUNT;
@@ -188,5 +218,3 @@ LRESULT CMainFrame::OnNcHitTest(CPoint point)
 
 	return HTCLIENT;
 }
-
-

@@ -222,9 +222,13 @@ void CTopBar::OnLButtonDown(UINT nFlags, CPoint point)
 	{
 	case TOP_NAV_MONITOR: case TOP_NAV_RESULTS:
 	case TOP_NAV_RECIPE:  case TOP_NAV_STATS: case TOP_NAV_CONFIG:
-		m_activeView = (NavView)(HitTest(point, client.Width()) - TOP_NAV_MONITOR);
+	{
+		TopBtn hit = HitTest(point, client.Width());
+		m_activeView = (NavView)(hit - TOP_NAV_MONITOR);
 		Invalidate();
+		GetParentFrame()->PostMessage(Theme::WM_NAV_CHANGED, (WPARAM)m_activeView, 0);
 		break;
+	}
 	case TOP_ACT_CONNECT:
 		m_connected = !m_connected;
 		if (!m_connected) m_running = false;
