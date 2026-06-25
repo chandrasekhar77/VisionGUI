@@ -137,24 +137,42 @@ void CTopBar::DrawBar(CDC& dc, int w)
 	CFont* pOld = dc.SelectObject(&m_font);
 	dc.SetBkMode(TRANSPARENT);
 
-	// Nav buttons
+	// Nav buttons — rounded rect (pill) style
 	static const LPCTSTR navLabels[NAV_COUNT] = {
 		_T("Monitoring"), _T("Results"), _T("Recipe"), _T("Statistics"), _T("Config")
 	};
+
+	// PS_NULL pen so RoundRect draws no border
+	CPen nullPen(PS_NULL, 0, RGB(0, 0, 0));
+	CPen* pSavedPen = dc.SelectObject(&nullPen);
+
 	for (int i = 0; i < NAV_COUNT; i++)
 	{
 		CRect rc(i * NAV_BTN_W, 0, (i + 1) * NAV_BTN_W, TOP_BAR_H);
 		bool active = (i == (int)m_activeView);
 		bool hover  = (m_hoverBtn == (TopBtn)(TOP_NAV_MONITOR + i));
 
-		if (hover && !active)
-			dc.FillSolidRect(&rc, HOVER);
-		if (active)
-			dc.FillSolidRect(rc.left, rc.bottom - 2, rc.Width(), 2, ACCENT);
+		// Pill background (active or hover)
+		if (active || hover)
+		{
+			CRect rcPill(rc.left + 8, rc.top + 5, rc.right - 8, rc.bottom - 5);
+			CBrush br(HOVER);
+			CBrush* pOldBr = dc.SelectObject(&br);
+			// ellipse == pill height → true capsule shape
+			dc.RoundRect(rcPill.left, rcPill.top, rcPill.right, rcPill.bottom,
+				rcPill.Height(), rcPill.Height());
+			dc.SelectObject(pOldBr);
+		}
 
-		dc.SetTextColor(active ? TEXT : TEXT_DIM);
+		// 2 px accent underline for the active tab
+		if (active)
+			dc.FillSolidRect(rc.left + 10, rc.bottom - 3, rc.Width() - 20, 2, ACCENT);
+
+		dc.SetTextColor(active ? TEXT : (hover ? TEXT : TEXT_DIM));
 		dc.DrawText(navLabels[i], &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 	}
+
+	dc.SelectObject(pSavedPen);
 
 	// Separator after nav zone
 	dc.FillSolidRect(NAV_BTN_W * NAV_COUNT, 8, 1, TOP_BAR_H - 16, SEPARATOR);
