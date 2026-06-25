@@ -16,6 +16,7 @@ IMPLEMENT_DYNAMIC(CMainFrame, CFrameWndEx)
 BEGIN_MESSAGE_MAP(CMainFrame, CFrameWndEx)
 	ON_WM_CREATE()
 	ON_WM_SETFOCUS()
+	ON_WM_SIZE()
 	ON_WM_NCCALCSIZE()
 	ON_WM_NCHITTEST()
 	ON_MESSAGE(Theme::WM_NAV_CHANGED, &CMainFrame::OnNavChanged)
@@ -163,6 +164,14 @@ LRESULT CMainFrame::OnNavChanged(WPARAM wParam, LPARAM /*lParam*/)
 void CMainFrame::AssertValid() const { CFrameWndEx::AssertValid(); }
 void CMainFrame::Dump(CDumpContext& dc) const { CFrameWndEx::Dump(dc); }
 #endif
+
+void CMainFrame::OnSize(UINT nType, int cx, int cy)
+{
+	CFrameWndEx::OnSize(nType, cx, cy);
+	// Force all children to repaint — needed after maximize/restore because
+	// WM_NCCALCSIZE changes the client rect outside MFC's normal layout path.
+	RedrawWindow(nullptr, nullptr, RDW_INVALIDATE | RDW_UPDATENOW | RDW_ALLCHILDREN);
+}
 
 void CMainFrame::OnSetFocus(CWnd* /*pOldWnd*/)
 {
