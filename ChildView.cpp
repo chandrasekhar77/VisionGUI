@@ -14,9 +14,6 @@
 
 CChildView::CChildView()
 {
-	m_titleFont.CreateFont(14, 0, 0, 0, FW_NORMAL, FALSE, FALSE, FALSE,
-		DEFAULT_CHARSET, OUT_DEFAULT_PRECIS, CLIP_DEFAULT_PRECIS,
-		CLEARTYPE_QUALITY, DEFAULT_PITCH | FF_SWISS, _T("Segoe UI"));
 }
 
 CChildView::~CChildView()
@@ -116,28 +113,19 @@ void CChildView::OnPaint()
 	GetClientRect(&client);
 	int w = client.Width();
 
-	// Title bar background
-	dc.FillSolidRect(0, 0, w, Theme::TITLE_H, Theme::BG);
+	// Full dark canvas — no title bar strip
+	dc.FillSolidRect(&client, Theme::BG);
 
-	// App name
-	CFont* pOldFont = dc.SelectObject(&m_titleFont);
-	dc.SetBkMode(TRANSPARENT);
-	dc.SetTextColor(Theme::TEXT);
-	CRect rcLabel(12, 0, w - Theme::BTN_W * 3, Theme::TITLE_H);
-	dc.DrawText(_T("VisionGUI"), &rcLabel, DT_LEFT | DT_VCENTER | DT_SINGLELINE);
-	dc.SelectObject(pOldFont);
-
-	// Caption buttons
-	bool zoomed = GetParentFrame()->IsZoomed() != FALSE;
-	CRect rcClose, rcMax, rcMin;
-	GetBtnRects(w, rcClose, rcMax, rcMin);
-	DrawTitleBtn(&dc, rcClose, BTN_CLOSE, m_hoverBtn == HOVER_CLOSE);
-	DrawTitleBtn(&dc, rcMax,   BTN_MAX,   m_hoverBtn == HOVER_MAX,   zoomed);
-	DrawTitleBtn(&dc, rcMin,   BTN_MIN,   m_hoverBtn == HOVER_MIN);
-
-	// Content area
-	CRect rcContent(0, Theme::TITLE_H, w, client.Height());
-	dc.FillSolidRect(&rcContent, Theme::BG);
+	// Overlay window buttons — only when mouse is in the top-right zone
+	if (m_showButtons)
+	{
+		bool zoomed = GetParentFrame()->IsZoomed() != FALSE;
+		CRect rcClose, rcMax, rcMin;
+		GetBtnRects(w, rcClose, rcMax, rcMin);
+		DrawTitleBtn(&dc, rcClose, BTN_CLOSE, m_hoverBtn == HOVER_CLOSE);
+		DrawTitleBtn(&dc, rcMax,   BTN_MAX,   m_hoverBtn == HOVER_MAX, zoomed);
+		DrawTitleBtn(&dc, rcMin,   BTN_MIN,   m_hoverBtn == HOVER_MIN);
+	}
 }
 
 BOOL CChildView::OnEraseBkgnd(CDC* /*pDC*/)
@@ -188,17 +176,33 @@ void CChildView::OnMouseMove(UINT nFlags, CPoint point)
 
 	CRect client;
 	GetClientRect(&client);
+	int w = client.Width();
+
 	CRect rcClose, rcMax, rcMin;
-	GetBtnRects(client.Width(), rcClose, rcMax, rcMin);
+	GetBtnRects(w, rcClose, rcMax, rcMin);
 
-	HoverBtn prev = m_hoverBtn;
-	if      (rcClose.PtInRect(point)) m_hoverBtn = HOVER_CLOSE;
-	else if (rcMax.PtInRect(point))   m_hoverBtn = HOVER_MAX;
-	else if (rcMin.PtInRect(point))   m_hoverBtn = HOVER_MIN;
-	else                              m_hoverBtn = HOVER_NONE;
+	// Show buttons when mouse enters the top-right zone
+	CRect rcBtnZone(w - Theme::BTN_W * 3, 0, w, Theme::TITLE_H);
+	bool showNow = rcBtnZone.PtInRect(point);
 
-	if (m_hoverBtn != prev)
-		InvalidateRect(CRect(0, 0, client.Width(), Theme::TITLE_H));
+	HoverBtn prevHover  = m_hoverBtn;
+	bool     prevShow   = m_showButtons;
+
+	m_showButtons = showNow;
+	if (showNow)
+	{
+		if      (rcClose.PtInRect(point)) m_hoverBtn = HOVER_CLOSE;
+		else if (rcMax.PtInRect(point))   m_hoverBtn = HOVER_MAX;
+		else if (rcMin.PtInRect(point))   m_hoverBtn = HOVER_MIN;
+		else                              m_hoverBtn = HOVER_NONE;
+	}
+	else
+	{
+		m_hoverBtn = HOVER_NONE;
+	}
+
+	if (m_showButtons != prevShow || m_hoverBtn != prevHover)
+		InvalidateRect(CRect(w - Theme::BTN_W * 3, 0, w, Theme::TITLE_H));
 
 	CWnd::OnMouseMove(nFlags, point);
 }
@@ -206,11 +210,12 @@ void CChildView::OnMouseMove(UINT nFlags, CPoint point)
 void CChildView::OnMouseLeave()
 {
 	m_trackingMouse = false;
-	if (m_hoverBtn != HOVER_NONE)
+	if (m_showButtons || m_hoverBtn != HOVER_NONE)
 	{
-		m_hoverBtn = HOVER_NONE;
+		m_showButtons = false;
+		m_hoverBtn    = HOVER_NONE;
 		CRect client;
 		GetClientRect(&client);
-		InvalidateRect(CRect(0, 0, client.Width(), Theme::TITLE_H));
+		InvalidateRect(CRect(client.Width() - Theme::BTN_W * 3, 0, client.Width(), Theme::TITLE_H));
 	}
 }

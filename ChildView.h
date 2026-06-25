@@ -19,7 +19,7 @@ private:
 	enum HoverBtn { HOVER_NONE, HOVER_MIN, HOVER_MAX, HOVER_CLOSE };
 	HoverBtn m_hoverBtn      = HOVER_NONE;
 	bool     m_trackingMouse = false;
-	CFont    m_titleFont;
+	bool     m_showButtons   = false;
 
 protected:
 	afx_msg void OnPaint();
