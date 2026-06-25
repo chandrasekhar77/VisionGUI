@@ -81,6 +81,26 @@ int CTopBar::OnCreate(LPCREATESTRUCT lpcs)
 // Drawing helpers
 // ---------------------------------------------------------------------------
 
+// Anti-aliased filled pill using GDI+
+static void FillPill(CDC& dc, const CRect& rc, COLORREF color)
+{
+	using namespace Gdiplus;
+	Graphics g(dc.GetSafeHdc());
+	g.SetSmoothingMode(SmoothingModeAntiAlias);
+
+	int r = rc.Height() / 2;          // radius = half the height → true capsule
+	int x = rc.left, y = rc.top;
+	int w = rc.Width(), h = rc.Height();
+
+	GraphicsPath path;
+	path.AddArc(x,         y,     r * 2, r * 2, 180, 180); // left semicircle
+	path.AddArc(x + w - r * 2, y, r * 2, r * 2, 0,   180); // right semicircle
+	path.CloseFigure();
+
+	SolidBrush brush(Color(GetRValue(color), GetGValue(color), GetBValue(color)));
+	g.FillPath(&brush, &path);
+}
+
 static void DrawWinBtn(CDC& dc, const CRect& rc, Theme::TopBtn type, bool hover, bool zoomed)
 {
 	COLORREF bg = hover
@@ -142,32 +162,22 @@ void CTopBar::DrawBar(CDC& dc, int w)
 		_T("Monitoring"), _T("Results"), _T("Recipe"), _T("Statistics"), _T("Config")
 	};
 
-	// PS_NULL pen so RoundRect draws no border
-	CPen nullPen(PS_NULL, 0, RGB(0, 0, 0));
-	CPen* pSavedPen = dc.SelectObject(&nullPen);
-
 	for (int i = 0; i < NAV_COUNT; i++)
 	{
 		CRect rc(i * NAV_BTN_W, 0, (i + 1) * NAV_BTN_W, TOP_BAR_H);
 		bool active = (i == (int)m_activeView);
 		bool hover  = (m_hoverBtn == (TopBtn)(TOP_NAV_MONITOR + i));
 
-		// Pill background — accent fill for active, hover gray for hover
+		// Pill background — anti-aliased capsule
 		if (active || hover)
 		{
 			CRect rcPill(rc.left + 8, rc.top + 5, rc.right - 8, rc.bottom - 5);
-			CBrush br(active ? ACCENT : HOVER);
-			CBrush* pOldBr = dc.SelectObject(&br);
-			dc.RoundRect(rcPill.left, rcPill.top, rcPill.right, rcPill.bottom,
-				rcPill.Height(), rcPill.Height());
-			dc.SelectObject(pOldBr);
+			FillPill(dc, rcPill, active ? ACCENT : HOVER);
 		}
 
 		dc.SetTextColor(hover || active ? TEXT : TEXT_DIM);
 		dc.DrawText(navLabels[i], &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 	}
-
-	dc.SelectObject(pSavedPen);
 
 	// Separator after nav zone
 	dc.FillSolidRect(NAV_BTN_W * NAV_COUNT, 8, 1, TOP_BAR_H - 16, SEPARATOR);

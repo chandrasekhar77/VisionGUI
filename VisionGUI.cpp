@@ -91,6 +91,9 @@ BOOL CVisionGUIApp::InitInstance()
 	SetRegistryKey(_T("Local AppWizard-Generated Applications"));
 
 
+	Gdiplus::GdiplusStartupInput gdiplusInput;
+	Gdiplus::GdiplusStartup(&m_gdiplusToken, &gdiplusInput, nullptr);
+
 	m_nAppLook = ID_VIEW_APPLOOK_OFF_2007_BLACK;
 	CVisionVisualManager::SetStyle(CVisionVisualManager::Office2007_ObsidianBlack);
 	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CVisionVisualManager));
@@ -117,9 +120,8 @@ BOOL CVisionGUIApp::InitInstance()
 
 int CVisionGUIApp::ExitInstance()
 {
-	//TODO: handle additional resources you may have added
 	AfxOleTerm(FALSE);
-
+	if (m_gdiplusToken) Gdiplus::GdiplusShutdown(m_gdiplusToken);
 	return CWinApp::ExitInstance();
 }
 
