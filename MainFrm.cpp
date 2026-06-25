@@ -168,11 +168,16 @@ LRESULT CMainFrame::OnNcHitTest(CPoint point)
 		if (point.y >= wr.bottom - b) return HTBOTTOM;
 	}
 
-	// Caption zone — lets Windows handle drag and system double-click
-	// Exclude the rightmost 3 buttons so they get WM_LBUTTONDOWN in CChildView
-	if (point.y < wr.top + Theme::TITLE_H &&
-		point.x < wr.right - Theme::BTN_W * 3)
-		return HTCAPTION;
+	// Top bar: nav zone (left) and action zone (right) are HTCLIENT so CChildView
+	// receives clicks. The middle gap between them is HTCAPTION for window dragging.
+	if (point.y < wr.top + Theme::TOP_BAR_H)
+	{
+		int navEnd  = wr.left + Theme::NAV_BTN_W * Theme::NAV_COUNT;
+		int actStart = wr.right - Theme::BTN_W * 3 - Theme::ACT_BTN_W * 3 - 8;
+		if (point.x > navEnd && point.x < actStart)
+			return HTCAPTION;
+		return HTCLIENT;
+	}
 
 	return HTCLIENT;
 }
