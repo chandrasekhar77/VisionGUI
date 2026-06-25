@@ -232,7 +232,18 @@ void CTopBar::OnPaint()
 	CPaintDC dc(this);
 	CRect client;
 	GetClientRect(&client);
-	DrawBar(dc, client.Width());
+
+	// Off-screen bitmap — draw everything here, then blit once to avoid flicker
+	CDC     memDC;
+	CBitmap bmp;
+	memDC.CreateCompatibleDC(&dc);
+	bmp.CreateCompatibleBitmap(&dc, client.Width(), client.Height());
+	CBitmap* pOldBmp = memDC.SelectObject(&bmp);
+
+	DrawBar(memDC, client.Width());
+
+	dc.BitBlt(0, 0, client.Width(), client.Height(), &memDC, 0, 0, SRCCOPY);
+	memDC.SelectObject(pOldBmp);
 }
 
 // ---------------------------------------------------------------------------
