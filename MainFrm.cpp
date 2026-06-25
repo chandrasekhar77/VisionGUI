@@ -65,16 +65,24 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// Docking
 	EnableDocking(CBRS_ALIGN_ANY);
 
+	// Top bar — docked first so all other panes appear below it
+	m_wndTopBar.Create(_T(""), this, CRect(0, 0, 0, Theme::TOP_BAR_H), FALSE,
+		ID_TOPBAR, WS_CHILD | WS_VISIBLE | CBRS_TOP);
+	m_wndTopBar.EnableGripper(FALSE);
+	m_wndTopBar.EnableDocking(CBRS_ALIGN_TOP);
+	DockPane(&m_wndTopBar, AFX_IDW_DOCKBAR_TOP);
+
+	// Content panes — restricted to left/right/bottom only
 	m_wndResultsPane.Create(_T("Inspection Results"), this, CRect(0, 0, 280, 400), TRUE,
 		ID_PANE_RESULTS,
 		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI);
-	m_wndResultsPane.EnableDocking(CBRS_ALIGN_ANY);
+	m_wndResultsPane.EnableDocking(CBRS_ALIGN_LEFT | CBRS_ALIGN_RIGHT | CBRS_ALIGN_BOTTOM);
 	DockPane(&m_wndResultsPane);
 
 	m_wndOutputPane.Create(_T("Output"), this, CRect(0, 0, 400, 140), TRUE,
 		ID_PANE_OUTPUT,
 		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI);
-	m_wndOutputPane.EnableDocking(CBRS_ALIGN_ANY);
+	m_wndOutputPane.EnableDocking(CBRS_ALIGN_LEFT | CBRS_ALIGN_RIGHT | CBRS_ALIGN_BOTTOM);
 	DockPane(&m_wndOutputPane);
 
 	BOOL darkMode = TRUE;
@@ -168,12 +176,11 @@ LRESULT CMainFrame::OnNcHitTest(CPoint point)
 		if (point.y >= wr.bottom - b) return HTBOTTOM;
 	}
 
-	// Top bar: nav zone (left) and action zone (right) are HTCLIENT so CChildView
-	// receives clicks. The middle gap between them is HTCAPTION for window dragging.
+	// Middle of the top bar (between nav and action buttons) is draggable
 	if (point.y < wr.top + Theme::TOP_BAR_H)
 	{
-		int navEnd  = wr.left + Theme::NAV_BTN_W * Theme::NAV_COUNT;
-		int actStart = wr.right - Theme::BTN_W * 3 - Theme::ACT_BTN_W * 3 - 8;
+		int navEnd   = wr.left + Theme::NAV_BTN_W * Theme::NAV_COUNT;
+		int actStart = wr.right - Theme::ACT_BTN_W * 3 - 8;
 		if (point.x > navEnd && point.x < actStart)
 			return HTCAPTION;
 		return HTCLIENT;

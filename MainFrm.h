@@ -6,8 +6,10 @@
 #include "UITheme.h"
 #include "DarkStatusBar.h"
 #include "DarkPane.h"
+#include "TopBar.h"
 #include "ChildView.h"
 
+#define ID_TOPBAR        1999
 #define ID_PANE_RESULTS  2000
 #define ID_PANE_OUTPUT   2001
 
@@ -32,6 +34,7 @@ public:
 protected:
 	CDarkStatusBar  m_wndStatusBar;
 	CChildView      m_wndView;
+	CTopBar         m_wndTopBar;
 	CDarkPane       m_wndResultsPane;
 	CDarkPane       m_wndOutputPane;
 

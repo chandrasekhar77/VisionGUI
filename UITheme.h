@@ -11,6 +11,12 @@ namespace Theme {
     constexpr int ACT_BTN_W    = 76;
     constexpr int NAV_COUNT    = 5;
 
+    // Navigation / action enums
+    enum NavView { VIEW_MONITORING, VIEW_RESULTS, VIEW_RECIPE, VIEW_STATS, VIEW_CONFIG };
+    enum TopBtn  { TOP_NONE,
+                   TOP_NAV_MONITOR, TOP_NAV_RESULTS, TOP_NAV_RECIPE, TOP_NAV_STATS, TOP_NAV_CONFIG,
+                   TOP_ACT_CONNECT, TOP_ACT_START, TOP_ACT_STOP };
+
     // Colors
     constexpr COLORREF BG          = RGB(0x1E, 0x1E, 0x1E);
     constexpr COLORREF TOP_BG      = RGB(0x25, 0x25, 0x26);

@@ -185,6 +185,7 @@
   <ItemGroup>
     <ClInclude Include="ChildView.h" />
     <ClInclude Include="DarkPane.h" />
+    <ClInclude Include="TopBar.h" />
     <ClInclude Include="DarkStatusBar.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
@@ -197,6 +198,7 @@
   <ItemGroup>
     <ClCompile Include="ChildView.cpp" />
     <ClCompile Include="DarkPane.cpp" />
+    <ClCompile Include="TopBar.cpp" />
     <ClCompile Include="DarkStatusBar.cpp" />
     <ClCompile Include="MainFrm.cpp" />
     <ClCompile Include="pch.cpp">
