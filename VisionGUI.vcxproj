@@ -183,7 +183,7 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="ChildView.h" />
+    <ClInclude Include="MonitoringView.h" />
     <ClInclude Include="DarkPane.h" />
     <ClInclude Include="TopBar.h" />
     <ClInclude Include="DarkStatusBar.h" />
@@ -196,7 +196,7 @@
     <ClInclude Include="VisionGUI.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="ChildView.cpp" />
+    <ClCompile Include="MonitoringView.cpp" />
     <ClCompile Include="DarkPane.cpp" />
     <ClCompile Include="TopBar.cpp" />
     <ClCompile Include="DarkStatusBar.cpp" />

@@ -7,7 +7,7 @@
 #include "DarkStatusBar.h"
 #include "DarkPane.h"
 #include "TopBar.h"
-#include "ChildView.h"
+#include "MonitoringView.h"
 
 #define ID_TOPBAR        1999
 #define ID_PANE_RESULTS  2000
@@ -33,7 +33,7 @@ public:
 
 protected:
 	CDarkStatusBar  m_wndStatusBar;
-	CChildView      m_wndView;
+	CMonitoringView m_wndView;
 	CTopBar         m_wndTopBar;
 	CDarkPane       m_wndResultsPane;
 	CDarkPane       m_wndOutputPane;

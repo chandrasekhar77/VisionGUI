@@ -1,11 +1,11 @@
 #pragma once
 #include "UITheme.h"
 
-class CChildView : public CWnd
+class CMonitoringView : public CWnd
 {
 public:
-	CChildView() = default;
-	virtual ~CChildView() = default;
+	CMonitoringView() = default;
+	virtual ~CMonitoringView() = default;
 
 protected:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);

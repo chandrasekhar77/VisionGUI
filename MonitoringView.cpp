@@ -1,18 +1,18 @@
 
-// ChildView.cpp : implementation of the CChildView class
+// MonitoringView.cpp : implementation of the CMonitoringView class
 //
 
 #include "pch.h"
 #include "framework.h"
 #include "VisionGUI.h"
-#include "ChildView.h"
+#include "MonitoringView.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
 #endif
 
 
-BEGIN_MESSAGE_MAP(CChildView, CWnd)
+BEGIN_MESSAGE_MAP(CMonitoringView, CWnd)
 	ON_WM_PAINT()
 	ON_WM_ERASEBKGND()
 	ON_WM_LBUTTONDOWN()
@@ -21,7 +21,7 @@ BEGIN_MESSAGE_MAP(CChildView, CWnd)
 END_MESSAGE_MAP()
 
 
-BOOL CChildView::PreCreateWindow(CREATESTRUCT& cs)
+BOOL CMonitoringView::PreCreateWindow(CREATESTRUCT& cs)
 {
 	if (!CWnd::PreCreateWindow(cs))
 		return FALSE;
@@ -96,7 +96,7 @@ static void DrawTitleBtn(CDC* dc, const CRect& rc, BtnType type, bool hover, boo
 // Paint
 // ---------------------------------------------------------------------------
 
-void CChildView::OnPaint()
+void CMonitoringView::OnPaint()
 {
 	CPaintDC dc(this);
 	CRect client;
@@ -118,7 +118,7 @@ void CChildView::OnPaint()
 	}
 }
 
-BOOL CChildView::OnEraseBkgnd(CDC* /*pDC*/)
+BOOL CMonitoringView::OnEraseBkgnd(CDC* /*pDC*/)
 {
 	return TRUE;
 }
@@ -128,7 +128,7 @@ BOOL CChildView::OnEraseBkgnd(CDC* /*pDC*/)
 // Mouse — overlay buttons only
 // ---------------------------------------------------------------------------
 
-void CChildView::OnLButtonDown(UINT nFlags, CPoint point)
+void CMonitoringView::OnLButtonDown(UINT nFlags, CPoint point)
 {
 	CRect client;
 	GetClientRect(&client);
@@ -151,7 +151,7 @@ void CChildView::OnLButtonDown(UINT nFlags, CPoint point)
 	CWnd::OnLButtonDown(nFlags, point);
 }
 
-void CChildView::OnMouseMove(UINT nFlags, CPoint point)
+void CMonitoringView::OnMouseMove(UINT nFlags, CPoint point)
 {
 	if (!m_trackingMouse)
 	{
@@ -191,7 +191,7 @@ void CChildView::OnMouseMove(UINT nFlags, CPoint point)
 	CWnd::OnMouseMove(nFlags, point);
 }
 
-void CChildView::OnMouseLeave()
+void CMonitoringView::OnMouseLeave()
 {
 	m_trackingMouse = false;
 	if (m_showButtons || m_hoverBtn != HOVER_NONE)
