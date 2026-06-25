@@ -6,7 +6,8 @@ class CTopBar : public CDockablePane
 	DECLARE_DYNAMIC(CTopBar)
 public:
 	CTopBar() = default;
-	virtual BOOL CanFloat() const override { return FALSE; }
+	virtual BOOL CanFloat()      const override { return FALSE; }
+	virtual BOOL CanBeResized() const override { return FALSE; }
 
 private:
 	Theme::NavView  m_activeView   = Theme::VIEW_MONITORING;
