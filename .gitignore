@@ -24,5 +24,3 @@ Release/
 ipch/
 *.tlog
 
-# Generated
-*.rc2
