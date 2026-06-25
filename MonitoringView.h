@@ -11,5 +11,6 @@ protected:
 	virtual BOOL PreCreateWindow(CREATESTRUCT& cs);
 	afx_msg void OnPaint();
 	afx_msg BOOL OnEraseBkgnd(CDC* pDC);
+	afx_msg void OnLButtonDown(UINT nFlags, CPoint point);
 	DECLARE_MESSAGE_MAP()
 };

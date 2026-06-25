@@ -249,7 +249,11 @@ void CTopBar::OnLButtonDown(UINT nFlags, CPoint point)
 		GetParentFrame()->ShowWindow(SW_MINIMIZE);
 		break;
 	default:
-		CDockablePane::OnLButtonDown(nFlags, point);
+		// Blank area in the top bar drags the window
+		ClientToScreen(&point);
+		ReleaseCapture();
+		GetParentFrame()->PostMessage(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(point.x, point.y));
+		break;
 	}
 }
 

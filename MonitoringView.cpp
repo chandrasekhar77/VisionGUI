@@ -13,6 +13,7 @@
 BEGIN_MESSAGE_MAP(CMonitoringView, CWnd)
 	ON_WM_PAINT()
 	ON_WM_ERASEBKGND()
+	ON_WM_LBUTTONDOWN()
 END_MESSAGE_MAP()
 
 BOOL CMonitoringView::PreCreateWindow(CREATESTRUCT& cs)
@@ -39,4 +40,11 @@ void CMonitoringView::OnPaint()
 BOOL CMonitoringView::OnEraseBkgnd(CDC* /*pDC*/)
 {
 	return TRUE;
+}
+
+void CMonitoringView::OnLButtonDown(UINT /*nFlags*/, CPoint point)
+{
+	ClientToScreen(&point);
+	ReleaseCapture();
+	GetParentFrame()->PostMessage(WM_NCLBUTTONDOWN, HTCAPTION, MAKELPARAM(point.x, point.y));
 }
