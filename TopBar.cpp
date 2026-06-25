@@ -152,23 +152,18 @@ void CTopBar::DrawBar(CDC& dc, int w)
 		bool active = (i == (int)m_activeView);
 		bool hover  = (m_hoverBtn == (TopBtn)(TOP_NAV_MONITOR + i));
 
-		// Pill background (active or hover)
+		// Pill background — accent fill for active, hover gray for hover
 		if (active || hover)
 		{
 			CRect rcPill(rc.left + 8, rc.top + 5, rc.right - 8, rc.bottom - 5);
-			CBrush br(HOVER);
+			CBrush br(active ? ACCENT : HOVER);
 			CBrush* pOldBr = dc.SelectObject(&br);
-			// ellipse == pill height → true capsule shape
 			dc.RoundRect(rcPill.left, rcPill.top, rcPill.right, rcPill.bottom,
 				rcPill.Height(), rcPill.Height());
 			dc.SelectObject(pOldBr);
 		}
 
-		// 2 px accent underline for the active tab
-		if (active)
-			dc.FillSolidRect(rc.left + 10, rc.bottom - 3, rc.Width() - 20, 2, ACCENT);
-
-		dc.SetTextColor(active ? TEXT : (hover ? TEXT : TEXT_DIM));
+		dc.SetTextColor(hover || active ? TEXT : TEXT_DIM);
 		dc.DrawText(navLabels[i], &rc, DT_CENTER | DT_VCENTER | DT_SINGLELINE);
 	}
 
