@@ -185,6 +185,7 @@
   <ItemGroup>
     <ClInclude Include="MonitoringView.h" />
     <ClInclude Include="DarkPane.h" />
+    <ClInclude Include="VisionVisualManager.h" />
     <ClInclude Include="TopBar.h" />
     <ClInclude Include="DarkStatusBar.h" />
     <ClInclude Include="framework.h" />
@@ -198,6 +199,7 @@
   <ItemGroup>
     <ClCompile Include="MonitoringView.cpp" />
     <ClCompile Include="DarkPane.cpp" />
+    <ClCompile Include="VisionVisualManager.cpp" />
     <ClCompile Include="TopBar.cpp" />
     <ClCompile Include="DarkStatusBar.cpp" />
     <ClCompile Include="MainFrm.cpp" />

@@ -8,6 +8,7 @@
 #include "afxdialogex.h"
 #include "VisionGUI.h"
 #include "MainFrm.h"
+#include "VisionVisualManager.h"
 
 
 #ifdef _DEBUG
@@ -91,8 +92,8 @@ BOOL CVisionGUIApp::InitInstance()
 
 
 	m_nAppLook = ID_VIEW_APPLOOK_OFF_2007_BLACK;
-	CMFCVisualManagerOffice2007::SetStyle(CMFCVisualManagerOffice2007::Office2007_ObsidianBlack);
-	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CMFCVisualManagerOffice2007));
+	CVisionVisualManager::SetStyle(CVisionVisualManager::Office2007_ObsidianBlack);
+	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CVisionVisualManager));
 	CDockingManager::SetDockingMode(DT_SMART);
 
 	CFrameWnd* pFrame = new CMainFrame;
