@@ -81,23 +81,26 @@ int CTopBar::OnCreate(LPCREATESTRUCT lpcs)
 // Drawing helpers
 // ---------------------------------------------------------------------------
 
-// Anti-aliased filled pill using GDI+
+// Anti-aliased filled pill using GDI+.
+// Four 90-degree arcs trace the outline clockwise; diameter == height gives a true capsule.
 static void FillPill(CDC& dc, const CRect& rc, COLORREF color)
 {
 	using namespace Gdiplus;
 	Graphics g(dc.GetSafeHdc());
 	g.SetSmoothingMode(SmoothingModeAntiAlias);
 
-	int r = rc.Height() / 2;          // radius = half the height → true capsule
-	int x = rc.left, y = rc.top;
-	int w = rc.Width(), h = rc.Height();
+	REAL x = (REAL)rc.left,  y = (REAL)rc.top;
+	REAL w = (REAL)rc.Width(), h = (REAL)rc.Height();
+	REAL d = h; // diameter == height → full semicircle at each end
 
 	GraphicsPath path;
-	path.AddArc(x,         y,     r * 2, r * 2, 180, 180); // left semicircle
-	path.AddArc(x + w - r * 2, y, r * 2, r * 2, 0,   180); // right semicircle
+	path.AddArc(x,         y, d, d, 180, 90); // top-left
+	path.AddArc(x + w - d, y, d, d, 270, 90); // top-right
+	path.AddArc(x + w - d, y, d, d,   0, 90); // bottom-right
+	path.AddArc(x,         y, d, d,  90, 90); // bottom-left
 	path.CloseFigure();
 
-	SolidBrush brush(Color(GetRValue(color), GetGValue(color), GetBValue(color)));
+	SolidBrush brush(Gdiplus::Color(GetRValue(color), GetGValue(color), GetBValue(color)));
 	g.FillPath(&brush, &path);
 }
 
