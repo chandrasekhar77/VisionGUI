@@ -10,7 +10,7 @@ public:
 
 private:
 	Theme::NavView  m_activeView   = Theme::VIEW_MONITORING;
-	Theme::TopBtn   m_hoverTopBtn  = Theme::TOP_NONE;
+	Theme::TopBtn   m_hoverBtn     = Theme::TOP_NONE;
 	bool            m_connected    = false;
 	bool            m_running      = false;
 	bool            m_trackingMouse = false;
@@ -19,6 +19,7 @@ private:
 	void DrawBar(CDC& dc, int w);
 	static Theme::TopBtn HitTest(CPoint pt, int w);
 	static void GetActBtnRects(int w, CRect& rcConnect, CRect& rcStart, CRect& rcStop);
+	static void GetWinBtnRects(int w, CRect& rcClose, CRect& rcMax, CRect& rcMin);
 
 protected:
 	afx_msg int  OnCreate(LPCREATESTRUCT lpcs);

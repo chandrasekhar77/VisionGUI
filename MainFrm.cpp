@@ -176,11 +176,11 @@ LRESULT CMainFrame::OnNcHitTest(CPoint point)
 		if (point.y >= wr.bottom - b) return HTBOTTOM;
 	}
 
-	// Middle of the top bar (between nav and action buttons) is draggable
+	// Middle of the top bar (between nav buttons and action/window buttons) is draggable
 	if (point.y < wr.top + Theme::TOP_BAR_H)
 	{
 		int navEnd   = wr.left + Theme::NAV_BTN_W * Theme::NAV_COUNT;
-		int actStart = wr.right - Theme::ACT_BTN_W * 3 - 8;
+		int actStart = wr.right - Theme::BTN_W * 3 - Theme::ACT_BTN_W * 3 - 8;
 		if (point.x > navEnd && point.x < actStart)
 			return HTCAPTION;
 		return HTCLIENT;

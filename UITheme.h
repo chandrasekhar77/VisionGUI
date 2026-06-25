@@ -15,7 +15,8 @@ namespace Theme {
     enum NavView { VIEW_MONITORING, VIEW_RESULTS, VIEW_RECIPE, VIEW_STATS, VIEW_CONFIG };
     enum TopBtn  { TOP_NONE,
                    TOP_NAV_MONITOR, TOP_NAV_RESULTS, TOP_NAV_RECIPE, TOP_NAV_STATS, TOP_NAV_CONFIG,
-                   TOP_ACT_CONNECT, TOP_ACT_START, TOP_ACT_STOP };
+                   TOP_ACT_CONNECT, TOP_ACT_START, TOP_ACT_STOP,
+                   TOP_WIN_MIN, TOP_WIN_MAX, TOP_WIN_CLOSE };
 
     // Colors
     constexpr COLORREF BG          = RGB(0x1E, 0x1E, 0x1E);
