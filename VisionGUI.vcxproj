@@ -183,6 +183,10 @@
     </ResourceCompile>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="IVisionModule.h" />
+    <ClInclude Include="InspectionModule.h" />
+    <ClInclude Include="PCBModel.h" />
+    <ClInclude Include="CImagePanel.h" />
     <ClInclude Include="MonitoringView.h" />
     <ClInclude Include="ContentView.h" />
     <ClInclude Include="DarkPane.h" />
@@ -198,6 +202,9 @@
     <ClInclude Include="VisionGUI.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="InspectionModule.cpp" />
+    <ClCompile Include="PCBModel.cpp" />
+    <ClCompile Include="CImagePanel.cpp" />
     <ClCompile Include="MonitoringView.cpp" />
     <ClCompile Include="ContentView.cpp" />
     <ClCompile Include="DarkPane.cpp" />

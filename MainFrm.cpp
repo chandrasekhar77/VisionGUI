@@ -6,6 +6,7 @@
 #include "framework.h"
 #include "VisionGUI.h"
 #include "MainFrm.h"
+#include "InspectionModule.h"
 
 #ifdef _DEBUG
 #define new DEBUG_NEW
@@ -31,7 +32,7 @@ static UINT indicators[] =
 };
 
 CMainFrame::CMainFrame() noexcept {}
-CMainFrame::~CMainFrame() {}
+CMainFrame::~CMainFrame() { DestroyModuleViews(); }
 
 // ---------------------------------------------------------------------------
 // Creation
@@ -44,24 +45,14 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 
 	SetMenu(nullptr);
 
-	// Primary view — auto-sized by the frame layout engine
+	// Placeholder view at AFX_IDW_PANE_FIRST — MFC layout engine requires this.
+	// It is always hidden behind module views.
 	if (!m_wndView.Create(nullptr, nullptr, AFX_WS_DEFAULT_VIEW,
 		CRect(0, 0, 0, 0), this, AFX_IDW_PANE_FIRST, nullptr))
 	{
-		TRACE0("Failed to create monitoring view\n");
+		TRACE0("Failed to create primary view placeholder\n");
 		return -1;
 	}
-
-	// Secondary views — manually kept in sync with the primary view via RecalcLayout
-	m_wndResultsView.Create(_T("Results View"),  this, ID_VIEW_RESULTS);
-	m_wndRecipeView .Create(_T("Recipe View"),   this, ID_VIEW_RECIPE);
-	m_wndStatsView  .Create(_T("Statistics"),    this, ID_VIEW_STATS);
-	m_wndConfigView .Create(_T("Configuration"), this, ID_VIEW_CONFIG);
-	// All secondary views start hidden; monitoring view is the default
-	m_wndResultsView.ShowWindow(SW_HIDE);
-	m_wndRecipeView .ShowWindow(SW_HIDE);
-	m_wndStatsView  .ShowWindow(SW_HIDE);
-	m_wndConfigView .ShowWindow(SW_HIDE);
 
 	if (!m_wndStatusBar.Create(this))
 	{
@@ -73,7 +64,7 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	// Docking
 	EnableDocking(CBRS_ALIGN_ANY);
 
-	// Top bar — docked first so all other panes appear below it
+	// Top bar — docked first so all other panes sit below it
 	m_wndTopBar.Create(_T(""), this, CRect(0, 0, 0, Theme::TOP_BAR_H), FALSE,
 		ID_TOPBAR, WS_CHILD | WS_VISIBLE | CBRS_TOP);
 	m_wndTopBar.EnableGripper(FALSE);
@@ -102,6 +93,11 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	SetWindowPos(nullptr, 0, 0, 0, 0,
 		SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_FRAMECHANGED);
 
+	// Register all modules, load the default one
+	RegisterModules();
+	if (!m_modules.empty())
+		LoadModule(m_modules[0].get());
+
 	return 0;
 }
 
@@ -116,7 +112,53 @@ BOOL CMainFrame::PreCreateWindow(CREATESTRUCT& cs)
 }
 
 // ---------------------------------------------------------------------------
-// Layout — keep secondary views co-located with the primary view
+// Module management
+// ---------------------------------------------------------------------------
+
+void CMainFrame::RegisterModules()
+{
+	m_modules.push_back(std::make_unique<CInspectionModule>());
+	// Add more modules here:
+	// m_modules.push_back(std::make_unique<CCalibrationModule>());
+}
+
+void CMainFrame::LoadModule(IVisionModule* pModule)
+{
+	DestroyModuleViews();
+
+	m_pActiveModule = pModule;
+	m_wndTopBar.SetModule(pModule);
+
+	if (!pModule) return;
+
+	// Ask the module to create a view for each of its nav tabs
+	int count = pModule->GetNavCount();
+	m_moduleViews.reserve(count);
+	for (int i = 0; i < count; i++)
+	{
+		UINT id = (UINT)(ID_MODULE_VIEW_BASE + i);
+		CWnd* pView = pModule->CreateView(i, this, id);
+		m_moduleViews.push_back(pView);
+	}
+
+	// Position views and show the first one
+	RecalcLayout();
+	ShowView(0);
+}
+
+void CMainFrame::DestroyModuleViews()
+{
+	for (CWnd* p : m_moduleViews)
+	{
+		if (p && p->m_hWnd)
+			p->DestroyWindow();
+		delete p;
+	}
+	m_moduleViews.clear();
+}
+
+// ---------------------------------------------------------------------------
+// Layout — keep module views co-located with the primary view placeholder
 // ---------------------------------------------------------------------------
 
 void CMainFrame::RecalcLayout(BOOL bNotify)
@@ -130,34 +172,35 @@ void CMainFrame::RecalcLayout(BOOL bNotify)
 	pPrimary->GetWindowRect(&rc);
 	ScreenToClient(&rc);
 
-	auto refit = [&](CWnd& w) { if (w.m_hWnd) w.MoveWindow(&rc, FALSE); };
-	refit(m_wndResultsView);
-	refit(m_wndRecipeView);
-	refit(m_wndStatsView);
-	refit(m_wndConfigView);
+	for (CWnd* pView : m_moduleViews)
+	{
+		if (pView && pView->m_hWnd)
+			pView->MoveWindow(&rc, FALSE);
+	}
 }
 
 // ---------------------------------------------------------------------------
 // View switching
 // ---------------------------------------------------------------------------
 
-void CMainFrame::ShowView(Theme::NavView view)
+void CMainFrame::ShowView(int navIndex)
 {
-	m_wndView       .ShowWindow(view == Theme::VIEW_MONITORING ? SW_SHOW : SW_HIDE);
-	m_wndResultsView.ShowWindow(view == Theme::VIEW_RESULTS    ? SW_SHOW : SW_HIDE);
-	m_wndRecipeView .ShowWindow(view == Theme::VIEW_RECIPE     ? SW_SHOW : SW_HIDE);
-	m_wndStatsView  .ShowWindow(view == Theme::VIEW_STATS      ? SW_SHOW : SW_HIDE);
-	m_wndConfigView .ShowWindow(view == Theme::VIEW_CONFIG     ? SW_SHOW : SW_HIDE);
+	for (int i = 0; i < (int)m_moduleViews.size(); i++)
+	{
+		CWnd* p = m_moduleViews[i];
+		if (p && p->m_hWnd)
+			p->ShowWindow(i == navIndex ? SW_SHOW : SW_HIDE);
+	}
 }
 
 LRESULT CMainFrame::OnNavChanged(WPARAM wParam, LPARAM /*lParam*/)
 {
-	ShowView(static_cast<Theme::NavView>(wParam));
+	ShowView((int)wParam);
 	return 0;
 }
 
 // ---------------------------------------------------------------------------
-// Diagnostics / misc
+// Misc
 // ---------------------------------------------------------------------------
 
 #ifdef _DEBUG
@@ -168,14 +211,15 @@ void CMainFrame::Dump(CDumpContext& dc) const { CFrameWndEx::Dump(dc); }
 void CMainFrame::OnSize(UINT nType, int cx, int cy)
 {
 	CFrameWndEx::OnSize(nType, cx, cy);
-	// Force all children to repaint — needed after maximize/restore because
-	// WM_NCCALCSIZE changes the client rect outside MFC's normal layout path.
 	RedrawWindow(nullptr, nullptr, RDW_INVALIDATE | RDW_UPDATENOW | RDW_ALLCHILDREN);
 }
 
 void CMainFrame::OnSetFocus(CWnd* /*pOldWnd*/)
 {
-	m_wndView.SetFocus();
+	if (!m_moduleViews.empty() && m_moduleViews[0] && m_moduleViews[0]->m_hWnd)
+		m_moduleViews[0]->SetFocus();
+	else
+		m_wndView.SetFocus();
 }
 
 BOOL CMainFrame::OnCmdMsg(UINT nID, int nCode, void* pExtra, AFX_CMDHANDLERINFO* pHandlerInfo)
@@ -218,7 +262,8 @@ LRESULT CMainFrame::OnNcHitTest(CPoint point)
 
 	if (point.y < wr.top + Theme::TOP_BAR_H)
 	{
-		int navEnd   = wr.left + Theme::NAV_BTN_W * Theme::NAV_COUNT;
+		int navCount = m_pActiveModule ? m_pActiveModule->GetNavCount() : 0;
+		int navEnd   = wr.left + Theme::NAV_BTN_W * navCount;
 		int actStart = wr.right - Theme::BTN_W * 3 - Theme::ACT_BTN_W * 3 - 8;
 		if (point.x > navEnd && point.x < actStart)
 			return HTCAPTION;

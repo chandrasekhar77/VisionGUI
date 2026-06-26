@@ -3,22 +3,21 @@
 //
 
 #pragma once
+#include <vector>
+#include <memory>
 #include "UITheme.h"
 #include "DarkStatusBar.h"
 #include "DarkPane.h"
 #include "TopBar.h"
 #include "MonitoringView.h"
-#include "ContentView.h"
+#include "IVisionModule.h"
 
 #define ID_TOPBAR        1999
 #define ID_PANE_RESULTS  2000
 #define ID_PANE_OUTPUT   2001
 
-// Secondary view IDs (primary = AFX_IDW_PANE_FIRST)
-#define ID_VIEW_RESULTS  (AFX_IDW_PANE_FIRST + 1)
-#define ID_VIEW_RECIPE   (AFX_IDW_PANE_FIRST + 2)
-#define ID_VIEW_STATS    (AFX_IDW_PANE_FIRST + 3)
-#define ID_VIEW_CONFIG   (AFX_IDW_PANE_FIRST + 4)
+// Base ID for views created by the active module
+#define ID_MODULE_VIEW_BASE  (AFX_IDW_PANE_FIRST + 10)
 
 class CMainFrame : public CFrameWndEx
 {
@@ -41,16 +40,20 @@ public:
 
 protected:
 	CDarkStatusBar  m_wndStatusBar;
-	CMonitoringView m_wndView;          // AFX_IDW_PANE_FIRST — auto-sized by frame
-	CContentView    m_wndResultsView;
-	CContentView    m_wndRecipeView;
-	CContentView    m_wndStatsView;
-	CContentView    m_wndConfigView;
+	CMonitoringView m_wndView;          // AFX_IDW_PANE_FIRST — placeholder for MFC layout engine
 	CTopBar         m_wndTopBar;
 	CDarkPane       m_wndResultsPane;
 	CDarkPane       m_wndOutputPane;
 
-	void ShowView(Theme::NavView view);
+	// Module management
+	std::vector<std::unique_ptr<IVisionModule>> m_modules;
+	IVisionModule*  m_pActiveModule = nullptr;
+	std::vector<CWnd*> m_moduleViews;    // owned by us; created by the active module
+
+	void RegisterModules();
+	void LoadModule(IVisionModule* pModule);
+	void ShowView(int navIndex);
+	void DestroyModuleViews();
 
 protected:
 	afx_msg int     OnCreate(LPCREATESTRUCT lpCreateStruct);

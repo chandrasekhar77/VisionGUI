@@ -1,5 +1,6 @@
 #pragma once
 #include "UITheme.h"
+#include "IVisionModule.h"
 
 class CTopBar : public CDockablePane
 {
@@ -7,18 +8,20 @@ class CTopBar : public CDockablePane
 public:
 	CTopBar() = default;
 	virtual BOOL CanFloat()      const override { return FALSE; }
-	virtual BOOL CanBeResized() const override { return FALSE; }
+	virtual BOOL CanBeResized()  const override { return FALSE; }
+
+	void SetModule(IVisionModule* pModule);
+	int  GetActiveNav() const { return m_activeNav; }
 
 private:
-	Theme::NavView  m_activeView   = Theme::VIEW_MONITORING;
+	IVisionModule*  m_pModule      = nullptr;
+	int             m_activeNav    = 0;
 	Theme::TopBtn   m_hoverBtn     = Theme::TOP_NONE;
-	bool            m_connected    = false;
-	bool            m_running      = false;
 	bool            m_trackingMouse = false;
 	CFont           m_font;
 
 	void DrawBar(CDC& dc, int w);
-	static Theme::TopBtn HitTest(CPoint pt, int w);
+	Theme::TopBtn HitTest(CPoint pt, int w) const;
 	static void GetActBtnRects(int w, CRect& rcConnect, CRect& rcStart, CRect& rcStop);
 	static void GetWinBtnRects(int w, CRect& rcClose, CRect& rcMax, CRect& rcMin);
 

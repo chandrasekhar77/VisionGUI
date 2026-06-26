@@ -15,7 +15,11 @@ namespace Theme {
     enum NavView { VIEW_MONITORING, VIEW_RESULTS, VIEW_RECIPE, VIEW_STATS, VIEW_CONFIG };
 
     // Posted from CTopBar to CMainFrame when the active nav view changes (wParam = NavView)
-    constexpr UINT WM_NAV_CHANGED = WM_APP + 1;
+    constexpr UINT WM_NAV_CHANGED  = WM_APP + 1;
+    // Posted from CImagePanel to CTeachView when a new ROI is drawn
+    constexpr UINT WM_ROI_ADDED    = WM_APP + 2;
+    // Posted from CImagePanel to CTeachView when an ROI is selected/deselected (wParam = id, -1 = none)
+    constexpr UINT WM_ROI_SELECTED = WM_APP + 3;
     enum TopBtn  { TOP_NONE,
                    TOP_NAV_MONITOR, TOP_NAV_RESULTS, TOP_NAV_RECIPE, TOP_NAV_STATS, TOP_NAV_CONFIG,
                    TOP_ACT_CONNECT, TOP_ACT_START, TOP_ACT_STOP,
