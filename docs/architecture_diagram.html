@@ -1,0 +1,524 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Vision Inspection Platform — Architecture</title>
+<style>
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: #1E1E1E;
+    font-family: 'Segoe UI', sans-serif;
+    color: #D4D4D4;
+    padding: 30px;
+  }
+  h1 {
+    text-align: center;
+    color: #FFFFFF;
+    font-size: 20px;
+    letter-spacing: 2px;
+    margin-bottom: 30px;
+    text-transform: uppercase;
+    border-bottom: 2px solid #007ACC;
+    padding-bottom: 12px;
+  }
+
+  .layer {
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 0px;
+    position: relative;
+  }
+  .layer-title {
+    font-size: 13px;
+    font-weight: bold;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .layer-subtitle {
+    font-size: 11px;
+    opacity: 0.6;
+    margin-top: -10px;
+    margin-bottom: 12px;
+    font-style: italic;
+  }
+
+  /* Layer colors */
+  .l4 { background: #1a2a3a; border: 2px solid #007ACC; }
+  .l4 .layer-title { color: #4FC3F7; }
+  .l3 { background: #1a2d1a; border: 2px solid #3C8A3C; }
+  .l3 .layer-title { color: #81C784; }
+  .l2 { background: #2d2a1a; border: 2px solid #C8A020; }
+  .l2 .layer-title { color: #FFD54F; }
+  .l1 { background: #2d1a1a; border: 2px solid #C0392B; }
+  .l1 .layer-title { color: #EF9A9A; }
+
+  /* Cards inside layers */
+  .cards { display: flex; gap: 10px; flex-wrap: wrap; }
+  .card {
+    border-radius: 7px;
+    padding: 10px 14px;
+    font-size: 12px;
+    flex: 1;
+    min-width: 140px;
+  }
+
+  /* L4 cards */
+  .card-shell { background: #003a5c; border: 1px solid #007ACC; color: #90CAF9; }
+  .card-module { background: #00274d; border: 1px solid #0D47A1; color: #64B5F6; }
+
+  /* L3 cards */
+  .card-seq  { background: #1b3a1b; border: 1px solid #388E3C; color: #A5D6A7; }
+  .card-pf   { background: #1b3a1b; border: 1px solid #2E7D32; color: #A5D6A7; }
+  .card-rep  { background: #1b3a1b; border: 1px solid #1B5E20; color: #A5D6A7; }
+
+  /* L2 cards */
+  .card-imgproc { background: #3a2e00; border: 1px solid #F9A825; color: #FFF176; }
+  .card-rule    { background: #3a2e00; border: 1px solid #F57F17; color: #FFE082; }
+  .card-dl      { background: #3a2e00; border: 1px solid #E65100; color: #FFCC80; }
+  .card-model   { background: #3a2e00; border: 1px solid #BF360C; color: #FFAB91; }
+
+  /* L1 cards */
+  .card-hal { background: #3a1010; border: 1px solid #C62828; color: #EF9A9A; }
+
+  .card-title { font-weight: bold; margin-bottom: 6px; font-size: 12px; }
+  .card-items { list-style: none; }
+  .card-items li { font-size: 11px; opacity: 0.85; padding: 1px 0; }
+  .card-items li::before { content: "▸ "; opacity: 0.6; }
+
+  /* Arrow between layers */
+  .arrow-block {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 40px;
+    padding: 6px 0;
+  }
+  .arrow {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    font-size: 10px;
+    color: #9D9D9D;
+    gap: 2px;
+  }
+  .arrow .line {
+    width: 2px;
+    height: 18px;
+    background: linear-gradient(to bottom, #555, #333);
+  }
+  .arrow .head-down { color: #555; font-size: 14px; line-height: 1; }
+  .arrow .head-up   { color: #555; font-size: 14px; line-height: 1; }
+  .arrow .label { font-size: 10px; color: #777; white-space: nowrap; }
+
+  .contract {
+    background: #252526;
+    border: 1px dashed #555;
+    border-radius: 6px;
+    padding: 10px 16px;
+    margin: 0px 0;
+    font-size: 11px;
+    color: #9D9D9D;
+  }
+  .contract-title {
+    font-size: 10px;
+    font-weight: bold;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #666;
+    margin-bottom: 6px;
+  }
+  .contract-items {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+  }
+  .contract-tag {
+    background: #333;
+    border-radius: 4px;
+    padding: 3px 8px;
+    font-size: 10px;
+    font-family: 'Consolas', monospace;
+    color: #CE9178;
+    border: 1px solid #444;
+  }
+
+  /* Distribution box */
+  .distrib {
+    margin-top: 16px;
+    border-radius: 10px;
+    padding: 16px 20px;
+    background: #1e1e2d;
+    border: 2px solid #7E57C2;
+  }
+  .distrib-title { color: #CE93D8; font-size: 13px; font-weight: bold; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 12px; }
+  .distrib-cards { display: flex; gap: 14px; }
+  .card-master { background: #2a1a3a; border: 1px solid #7E57C2; color: #CE93D8; flex: 1; }
+  .card-insp   { background: #1a2a3a; border: 1px solid #26C6DA; color: #80DEEA; flex: 1; }
+
+  .feature-table { width: 100%; border-collapse: collapse; margin-top: 14px; font-size: 11px; }
+  .feature-table th {
+    padding: 6px 10px;
+    text-align: left;
+    font-size: 10px;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    color: #9D9D9D;
+    border-bottom: 1px solid #3A3A3A;
+  }
+  .feature-table td {
+    padding: 5px 10px;
+    border-bottom: 1px solid #2a2a2a;
+    color: #D4D4D4;
+  }
+  .feature-table tr:last-child td { border-bottom: none; }
+  .feat-name { color: #D4D4D4; }
+  .feat-on  { color: #81C784; font-weight: bold; text-align: center; }
+  .feat-off { color: #555;    text-align: center; }
+  .feat-partial { color: #FFD54F; text-align: center; }
+  .same-exe-badge {
+    display: inline-block;
+    background: #333;
+    border: 1px solid #7E57C2;
+    border-radius: 20px;
+    padding: 4px 14px;
+    font-size: 11px;
+    color: #CE93D8;
+    margin-bottom: 12px;
+    letter-spacing: 1px;
+  }
+
+  /* Rules box */
+  .rules {
+    margin-top: 16px;
+    border-radius: 10px;
+    padding: 14px 20px;
+    background: #1e1e1e;
+    border: 1px solid #3A3A3A;
+  }
+  .rules-title { color: #D4D4D4; font-size: 12px; font-weight: bold; letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 10px; }
+  .rules-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .rule-tag {
+    background: #252526;
+    border-left: 3px solid #007ACC;
+    padding: 6px 10px;
+    font-size: 11px;
+    border-radius: 0 4px 4px 0;
+    color: #D4D4D4;
+  }
+  .rule-tag.green { border-left-color: #3C8A3C; }
+  .rule-tag.yellow { border-left-color: #C8A020; }
+  .rule-tag.red { border-left-color: #C0392B; }
+  .rule-tag.purple { border-left-color: #7E57C2; }
+</style>
+</head>
+<body>
+
+<h1>Vision Inspection Platform — 4-Layer Architecture</h1>
+
+<!-- LAYER 4 -->
+<div class="layer l4">
+  <div class="layer-title">Layer 4 — UI / Management Layer</div>
+  <div class="layer-subtitle">Dark theme · Frameless · Dockable panes · Lightweight UI thread</div>
+  <div class="cards">
+    <div class="card card-shell">
+      <div class="card-title">Shell (constant)</div>
+      <ul class="card-items">
+        <li>MainFrm — layout, module switching</li>
+        <li>TopBar — nav pills, Connect/Start/Stop</li>
+        <li>DarkPane — dockable panes</li>
+        <li>UITheme — colors, dimensions</li>
+      </ul>
+    </div>
+    <div class="card card-module">
+      <div class="card-title">Module (swappable)</div>
+      <ul class="card-items">
+        <li>InspectionModule</li>
+        <li>CalibrationModule</li>
+        <li>SetupModule</li>
+        <li>implements IVisionModule</li>
+      </ul>
+    </div>
+    <div class="card card-module">
+      <div class="card-title">Views (10 tabs)</div>
+      <ul class="card-items">
+        <li>Monitoring Dashboard</li>
+        <li>Real-time Results</li>
+        <li>Recipe / Config</li>
+        <li>Statistics &amp; Defect Viewer</li>
+        <li>Camera / Hardware / Lighting</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CONTRACT L3-L4 -->
+<div class="contract">
+  <div class="contract-title">Contract — L3 ↔ L4</div>
+  <div class="contract-items">
+    <span class="contract-tag">ISequenceController</span>
+    <span class="contract-tag">IStatusPublisher</span>
+    <span class="contract-tag">IResultPublisher</span>
+    <span class="contract-tag">IStatisticsPublisher</span>
+    <span class="contract-tag">PostMessage (worker → UI)</span>
+  </div>
+</div>
+
+<!-- LAYER 3 -->
+<div class="layer l3">
+  <div class="layer-title">Layer 3 — Business Layer</div>
+  <div class="layer-subtitle">Orchestrates HAL + Inspection · No vendor SDK calls · No UI widget calls</div>
+  <div class="cards">
+    <div class="card card-seq">
+      <div class="card-title">Sequence Controller</div>
+      <ul class="card-items">
+        <li>Grab → Detect Panel</li>
+        <li>Set lighting per ROI</li>
+        <li>Submit to Inspection</li>
+        <li>Collect result</li>
+        <li>Calls L1 HAL directly</li>
+        <li>Calls L2 Inspection directly</li>
+      </ul>
+    </div>
+    <div class="card card-pf">
+      <div class="card-title">Pass / Fail Evaluation</div>
+      <ul class="card-items">
+        <li>Aggregate ROI results</li>
+        <li>Final panel verdict</li>
+        <li>Apply tolerance rules</li>
+      </ul>
+    </div>
+    <div class="card card-rep">
+      <div class="card-title">Result Reporting</div>
+      <ul class="card-items">
+        <li>Upload to server</li>
+        <li>ITcpClient (JSON)</li>
+        <li>4-byte length prefix</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CONTRACT L2-L3 -->
+<div class="contract">
+  <div class="contract-title">Contract — L2 ↔ L3</div>
+  <div class="contract-items">
+    <span class="contract-tag">IInspectionEngine</span>
+    <span class="contract-tag">IInspectionResult</span>
+    <span class="contract-tag">IModelLoader</span>
+    <span class="contract-tag">IModel</span>
+  </div>
+</div>
+
+<!-- LAYER 2 -->
+<div class="layer l2">
+  <div class="layer-title">Layer 2 — Inspection Layer</div>
+  <div class="layer-subtitle">Pure image processing · No hardware calls · No UI calls</div>
+  <div class="cards">
+    <div class="card card-imgproc">
+      <div class="card-title">Image Processing</div>
+      <ul class="card-items">
+        <li>MIL</li>
+        <li>OpenCV</li>
+        <li>Custom Algorithms</li>
+        <li>Binarization, Morphology</li>
+      </ul>
+    </div>
+    <div class="card card-rule">
+      <div class="card-title">Rule-Based Engine</div>
+      <ul class="card-items">
+        <li>MIL / OpenCV / Custom</li>
+        <li>Selected per ROI in model</li>
+        <li>Deterministic</li>
+      </ul>
+    </div>
+    <div class="card card-dl">
+      <div class="card-title">Deep Learning Engine</div>
+      <ul class="card-items">
+        <li>Neural Network</li>
+        <li>GPU accelerated</li>
+        <li>Same model spec as Rule-Based</li>
+      </ul>
+    </div>
+    <div class="card card-model">
+      <div class="card-title">Model / Recipe System</div>
+      <ul class="card-items">
+        <li>Golden image</li>
+        <li>ROI definitions</li>
+        <li>Engine type per ROI</li>
+        <li>Tolerance / parameters</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- CONTRACT L1-L2 -->
+<div class="contract">
+  <div class="contract-title">Contract — L1 ↔ L2/L3</div>
+  <div class="contract-items">
+    <span class="contract-tag">ICamera</span>
+    <span class="contract-tag">IImageFrame</span>
+    <span class="contract-tag">IRingBuffer</span>
+    <span class="contract-tag">ILightController</span>
+    <span class="contract-tag">IIODevice</span>
+    <span class="contract-tag">IMotionController</span>
+    <span class="contract-tag">ITcpClient</span>
+  </div>
+</div>
+
+<!-- LAYER 1 -->
+<div class="layer l1">
+  <div class="layer-title">Layer 1 — HAL (Hardware Abstraction Layer)</div>
+  <div class="layer-subtitle">Concrete vendor implementations · Never called directly — always through interface</div>
+  <div class="cards">
+    <div class="card card-hal">
+      <div class="card-title">ICamera</div>
+      <ul class="card-items">
+        <li>BaslerCamera</li>
+        <li>JAICamera</li>
+        <li>HikVisionCamera</li>
+        <li>SimulatedCamera</li>
+      </ul>
+    </div>
+    <div class="card card-hal">
+      <div class="card-title">IIODevice</div>
+      <ul class="card-items">
+        <li>NiDaqIODevice</li>
+        <li>AdvantechIODevice</li>
+        <li>SimulatedIODevice</li>
+      </ul>
+    </div>
+    <div class="card card-hal">
+      <div class="card-title">ILightController</div>
+      <ul class="card-items">
+        <li>CCSLightController</li>
+        <li>SchneiderLightCtrl</li>
+        <li>RS232 / RS485</li>
+      </ul>
+    </div>
+    <div class="card card-hal">
+      <div class="card-title">IMotionController</div>
+      <ul class="card-items">
+        <li>YaskawaMotion</li>
+        <li>MitsubishiMotion</li>
+        <li>Encoder-based sync</li>
+      </ul>
+    </div>
+    <div class="card card-hal">
+      <div class="card-title">IRingBuffer</div>
+      <ul class="card-items">
+        <li>Fixed capacity (e.g. 4GB)</li>
+        <li>Line scan accumulation</li>
+        <li>Panel edge detection</li>
+        <li>Leading / trailing edge</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- DISTRIBUTION -->
+<div class="distrib">
+  <div class="distrib-title">Distribution — Master + N Inspection PCs</div>
+  <div style="text-align:center; margin-bottom:12px;">
+    <span class="same-exe-badge">&#9679; Same EXE on all PCs — role and feature set controlled by config</span>
+  </div>
+
+  <table class="feature-table">
+    <thead>
+      <tr>
+        <th style="width:40%">Feature / Capability</th>
+        <th style="width:30%; text-align:center; color:#CE93D8;">Master PC</th>
+        <th style="width:30%; text-align:center; color:#80DEEA;">Inspection PC ×N</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td class="feat-name">All 4 Layers present in binary</td>
+        <td class="feat-on">✔</td>
+        <td class="feat-on">✔</td>
+      </tr>
+      <tr>
+        <td class="feat-name">HAL — Camera / IO / Light / Motion</td>
+        <td class="feat-on">✔ Active</td>
+        <td class="feat-off">✘ Disabled</td>
+      </tr>
+      <tr>
+        <td class="feat-name">Ring Buffer + Panel Edge Detection</td>
+        <td class="feat-on">✔ Active</td>
+        <td class="feat-off">✘ Disabled</td>
+      </tr>
+      <tr>
+        <td class="feat-name">Sequence Controller</td>
+        <td class="feat-on">✔ Active</td>
+        <td class="feat-off">✘ Disabled</td>
+      </tr>
+      <tr>
+        <td class="feat-name">Inspection Engine (L2)</td>
+        <td class="feat-on">✔ Active</td>
+        <td class="feat-on">✔ Active</td>
+      </tr>
+      <tr>
+        <td class="feat-name">Distribute panel images to Inspection PCs</td>
+        <td class="feat-on">✔</td>
+        <td class="feat-off">✘</td>
+      </tr>
+      <tr>
+        <td class="feat-name">Receive panel images from Master</td>
+        <td class="feat-off">✘</td>
+        <td class="feat-on">✔</td>
+      </tr>
+      <tr>
+        <td class="feat-name">Result Reporting (TCP/IP upload)</td>
+        <td class="feat-on">✔</td>
+        <td class="feat-off">✘ Disabled</td>
+      </tr>
+      <tr>
+        <td class="feat-name">Monitoring Dashboard</td>
+        <td class="feat-on">✔ Full</td>
+        <td class="feat-partial">~ Limited</td>
+      </tr>
+      <tr>
+        <td class="feat-name">Recipe / Model Editor</td>
+        <td class="feat-on">✔</td>
+        <td class="feat-off">✘ Disabled</td>
+      </tr>
+      <tr>
+        <td class="feat-name">Hardware / Camera / Lighting Config</td>
+        <td class="feat-on">✔</td>
+        <td class="feat-off">✘ Disabled</td>
+      </tr>
+      <tr>
+        <td class="feat-name">Statistics &amp; Defect Viewer</td>
+        <td class="feat-on">✔</td>
+        <td class="feat-off">✘ Disabled</td>
+      </tr>
+      <tr>
+        <td class="feat-name">Scalability</td>
+        <td class="feat-on">✔</td>
+        <td class="feat-on">Add more → higher throughput</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<!-- KEY RULES -->
+<div class="rules">
+  <div class="rules-title">Key Architecture Rules</div>
+  <div class="rules-grid">
+    <div class="rule-tag">Interface first — contract before implementation</div>
+    <div class="rule-tag">No layer skipping — L4 never calls L1 directly</div>
+    <div class="rule-tag">One direction of knowledge — lower layers know nothing above</div>
+    <div class="rule-tag green">Sequence Controller may call L1 HAL directly</div>
+    <div class="rule-tag green">L2 Inspection is pure — no hardware calls</div>
+    <div class="rule-tag green">Config drives vendor / engine selection</div>
+    <div class="rule-tag yellow">UI thread zero blocking — PostMessage only</div>
+    <div class="rule-tag yellow">Simulated HAL — full system without hardware</div>
+    <div class="rule-tag yellow">Golden dataset regression after every algorithm change</div>
+    <div class="rule-tag red">Never call vendor SDK outside HAL layer</div>
+    <div class="rule-tag red">Model is single source of truth — no magic numbers</div>
+    <div class="rule-tag purple">Same EXE on all PCs — features enabled/disabled by role config</div>
+  </div>
+</div>
+
+</body>
+</html>
