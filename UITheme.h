@@ -12,7 +12,7 @@ namespace Theme {
     constexpr int NAV_COUNT    = 5;
 
     // Navigation / action enums
-    enum NavView { VIEW_MONITORING, VIEW_RESULTS, VIEW_RECIPE, VIEW_STATS, VIEW_CONFIG };
+    enum NavView { VIEW_DASHBOARD, VIEW_RESULTS, VIEW_RECIPE, VIEW_STATS, VIEW_CONFIG };
 
     // Posted from CTopBar to CMainFrame when the active nav view changes (wParam = NavView)
     constexpr UINT WM_NAV_CHANGED  = WM_APP + 1;
@@ -20,6 +20,22 @@ namespace Theme {
     constexpr UINT WM_ROI_ADDED    = WM_APP + 2;
     // Posted from CImagePanel to CTeachView when an ROI is selected/deselected (wParam = id, -1 = none)
     constexpr UINT WM_ROI_SELECTED = WM_APP + 3;
+    // Posted by ILogger::Log() to CLoggingPane (wParam unused, lParam = LogMsg* — pane deletes it)
+    constexpr UINT WM_LOG_MESSAGE  = WM_APP + 4;
+    // Posted by L2 to CDefectListPane when a new defect is found (lParam = DefectInfo* — pane deletes it)
+    constexpr UINT WM_DEFECT_ADDED = WM_APP + 5;
+    // Posted by L2 to CDefectListPane to clear all rows (new panel starting)
+    constexpr UINT WM_DEFECT_CLEAR = WM_APP + 6;
+    // Posted by CDefectListPane to MainFrm when user clicks a row (wParam = defectId)
+    constexpr UINT WM_DEFECT_SELECTED = WM_APP + 7;
+    // Posted by CModelManagerPane to MainFrm when user loads a model (lParam = LPCTSTR name)
+    constexpr UINT WM_MODEL_LOADED    = WM_APP + 8;
+
+    // Model Manager toolbar button IDs
+    constexpr UINT ID_MODEL_LOAD      = 3000;
+    constexpr UINT ID_MODEL_NEW       = 3001;
+    constexpr UINT ID_MODEL_DELETE    = 3002;
+    constexpr UINT ID_MODEL_DUPLICATE = 3003;
     enum TopBtn  { TOP_NONE,
                    TOP_NAV_MONITOR, TOP_NAV_RESULTS, TOP_NAV_RECIPE, TOP_NAV_STATS, TOP_NAV_CONFIG,
                    TOP_ACT_CONNECT, TOP_ACT_START, TOP_ACT_STOP,

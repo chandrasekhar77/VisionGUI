@@ -9,6 +9,7 @@
 #include "VisionGUI.h"
 #include "MainFrm.h"
 #include "VisionVisualManager.h"
+#include "DarkPaneDivider.h"
 
 
 #ifdef _DEBUG
@@ -78,8 +79,7 @@ BOOL CVisionGUIApp::InitInstance()
 
 	EnableTaskbarInteraction(FALSE);
 
-	// AfxInitRichEdit2() is required to use RichEdit control
-	// AfxInitRichEdit2();
+	AfxInitRichEdit2();
 
 	// Standard initialization
 	// If you are not using these features and wish to reduce the size
@@ -98,6 +98,7 @@ BOOL CVisionGUIApp::InitInstance()
 	CVisionVisualManager::SetStyle(CVisionVisualManager::Office2007_ObsidianBlack);
 	CMFCVisualManager::SetDefaultManager(RUNTIME_CLASS(CVisionVisualManager));
 	CDockingManager::SetDockingMode(DT_SMART);
+	CPaneDivider::m_pSliderRTC = RUNTIME_CLASS(CDarkPaneDivider);
 
 	CFrameWnd* pFrame = new CMainFrame;
 	if (!pFrame)

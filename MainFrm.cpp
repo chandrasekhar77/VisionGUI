@@ -71,18 +71,27 @@ int CMainFrame::OnCreate(LPCREATESTRUCT lpCreateStruct)
 	m_wndTopBar.EnableDocking(CBRS_ALIGN_TOP);
 	DockPane(&m_wndTopBar, AFX_IDW_DOCKBAR_TOP);
 
-	// Content panes — restricted to left/right/bottom only
-	m_wndResultsPane.Create(_T("Inspection Results"), this, CRect(0, 0, 280, 400), TRUE,
-		ID_PANE_RESULTS,
-		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI);
-	m_wndResultsPane.EnableDocking(CBRS_ALIGN_LEFT | CBRS_ALIGN_RIGHT | CBRS_ALIGN_BOTTOM);
-	DockPane(&m_wndResultsPane);
-
-	m_wndOutputPane.Create(_T("Output"), this, CRect(0, 0, 400, 140), TRUE,
-		ID_PANE_OUTPUT,
+	m_wndLogPane.Create(_T("Log"), this, CRect(0, 0, 600, 160), TRUE,
+		ID_PANE_LOG,
 		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_BOTTOM | CBRS_FLOAT_MULTI);
-	m_wndOutputPane.EnableDocking(CBRS_ALIGN_LEFT | CBRS_ALIGN_RIGHT | CBRS_ALIGN_BOTTOM);
-	DockPane(&m_wndOutputPane);
+	m_wndLogPane.EnableDocking(CBRS_ALIGN_LEFT | CBRS_ALIGN_RIGHT | CBRS_ALIGN_BOTTOM);
+	DockPane(&m_wndLogPane);
+
+	m_wndDefectPane.Create(_T("Defects"), this, CRect(0, 0, 340, 500), TRUE,
+		ID_PANE_DEFECTS,
+		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_RIGHT | CBRS_FLOAT_MULTI);
+	m_wndDefectPane.EnableDocking(CBRS_ALIGN_LEFT | CBRS_ALIGN_RIGHT | CBRS_ALIGN_BOTTOM);
+	DockPane(&m_wndDefectPane);
+
+	m_wndModelPane.Create(_T("Models"), this, CRect(0, 0, 220, 500), TRUE,
+		ID_PANE_MODELS,
+		WS_CHILD | WS_VISIBLE | WS_CLIPSIBLINGS | WS_CLIPCHILDREN | CBRS_LEFT | CBRS_FLOAT_MULTI);
+	m_wndModelPane.EnableDocking(CBRS_ALIGN_LEFT | CBRS_ALIGN_RIGHT | CBRS_ALIGN_BOTTOM);
+	DockPane(&m_wndModelPane);
+
+	// Register global logger — all DLLs and layers can now call VisionLog::Info() etc.
+	VisionLog::Set(&m_wndLogPane);
+	VisionLog::Info(_T("VisionGUI started"));
 
 	BOOL darkMode = TRUE;
 	::DwmSetWindowAttribute(m_hWnd, DWMWA_USE_IMMERSIVE_DARK_MODE, &darkMode, sizeof(darkMode));
@@ -144,6 +153,7 @@ void CMainFrame::LoadModule(IVisionModule* pModule)
 	// Position views and show the first one
 	RecalcLayout();
 	ShowView(0);
+	UpdatePaneVisibility(0);
 }
 
 void CMainFrame::DestroyModuleViews()
@@ -195,8 +205,23 @@ void CMainFrame::ShowView(int navIndex)
 
 LRESULT CMainFrame::OnNavChanged(WPARAM wParam, LPARAM /*lParam*/)
 {
-	ShowView((int)wParam);
+	int navIndex = (int)wParam;
+	ShowView(navIndex);
+	UpdatePaneVisibility(navIndex);
 	return 0;
+}
+
+// ---------------------------------------------------------------------------
+// Pane visibility — rules:
+//   Log pane      : always visible
+//   Defect pane   : Monitoring view only
+//   Model pane    : Recipe view only
+// ---------------------------------------------------------------------------
+
+void CMainFrame::UpdatePaneVisibility(int navIndex)
+{
+	m_wndDefectPane.ShowPane(navIndex == Theme::VIEW_DASHBOARD, FALSE, FALSE);
+	m_wndModelPane.ShowPane (navIndex == Theme::VIEW_RECIPE,     FALSE, FALSE);
 }
 
 // ---------------------------------------------------------------------------

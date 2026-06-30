@@ -1,5 +1,6 @@
 #pragma once
 #include "UITheme.h"
+#include <afxPaneDivider.h>
 
 class CVisionVisualManager : public CMFCVisualManagerOffice2007
 {
@@ -7,4 +8,7 @@ class CVisionVisualManager : public CMFCVisualManagerOffice2007
 public:
 	COLORREF OnDrawPaneCaption(CDC* pDC, CDockablePane* pBar, BOOL bActive,
 	                           CRect rectCaption, CRect rectButtons) override;
+
+	void OnDrawPaneDivider(CDC* pDC, CPaneDivider* pSlider,
+	                       CRect rect, BOOL bAutoHideMode) override;
 };

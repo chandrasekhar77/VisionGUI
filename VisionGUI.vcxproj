@@ -184,6 +184,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="IVisionModule.h" />
+    <ClInclude Include="ILogger.h" />
     <ClInclude Include="InspectionModule.h" />
     <ClInclude Include="PCBModel.h" />
     <ClInclude Include="CImagePanel.h" />
@@ -196,10 +197,20 @@
     <ClInclude Include="framework.h" />
     <ClInclude Include="MainFrm.h" />
     <ClInclude Include="UITheme.h" />
+    <ClInclude Include="LoggingPane.h" />
+    <ClInclude Include="DefectListPane.h" />
+    <ClInclude Include="ModelManagerPane.h" />
+    <ClInclude Include="DarkHeaderCtrl.h" />
+    <ClInclude Include="DarkPaneDivider.h" />
     <ClInclude Include="pch.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
     <ClInclude Include="VisionGUI.h" />
+    <ClInclude Include="Contracts\ILogger.h" />
+    <ClInclude Include="Contracts\LoggerRegistry.h" />
+    <ClInclude Include="Contracts\DefectInfo.h" />
+    <ClInclude Include="Contracts\IDefectListListener.h" />
+    <ClInclude Include="Contracts\IModelLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="InspectionModule.cpp" />
@@ -212,6 +223,12 @@
     <ClCompile Include="TopBar.cpp" />
     <ClCompile Include="DarkStatusBar.cpp" />
     <ClCompile Include="MainFrm.cpp" />
+    <ClCompile Include="LoggingPane.cpp" />
+    <ClCompile Include="DefectListPane.cpp" />
+    <ClCompile Include="ModelManagerPane.cpp" />
+    <ClCompile Include="LoggerRegistry.cpp" />
+    <ClCompile Include="DarkHeaderCtrl.cpp" />
+    <ClCompile Include="DarkPaneDivider.cpp" />
     <ClCompile Include="pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Create</PrecompiledHeader>

@@ -11,7 +11,7 @@
 LPCTSTR CInspectionModule::GetNavLabel(int idx) const
 {
 	static const LPCTSTR labels[] = {
-		_T("Monitoring"), _T("Results"), _T("Recipe"), _T("Statistics"), _T("Config")
+		_T("Dashboard"), _T("Results"), _T("Recipe"), _T("Statistics"), _T("Config")
 	};
 	return (idx >= 0 && idx < GetNavCount()) ? labels[idx] : _T("");
 }

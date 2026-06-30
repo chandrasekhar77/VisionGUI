@@ -21,3 +21,30 @@ COLORREF CVisionVisualManager::OnDrawPaneCaption(CDC* pDC, CDockablePane* pBar,
 
 	return bActive ? TEXT : TEXT_DIM;
 }
+
+void CVisionVisualManager::OnDrawPaneDivider(CDC* pDC, CPaneDivider* pSlider,
+	CRect rect, BOOL bAutoHideMode)
+{
+	using namespace Theme;
+
+	pDC->FillSolidRect(&rect, BG);
+
+	// Check whether the cursor is currently over this divider window
+	CPoint pt;
+	GetCursorPos(&pt);
+	pSlider->ScreenToClient(&pt);
+	BOOL bHovered = rect.PtInRect(pt);
+
+	if (pSlider->IsHorizontal())
+	{
+		int y = rect.CenterPoint().y;
+		pDC->FillSolidRect(rect.left, y, rect.Width(), 1,
+			bHovered ? ACCENT : SEPARATOR);
+	}
+	else
+	{
+		int x = rect.CenterPoint().x;
+		pDC->FillSolidRect(x, rect.top, 1, rect.Height(),
+			bHovered ? ACCENT : SEPARATOR);
+	}
+}

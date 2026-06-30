@@ -7,14 +7,18 @@
 #include <memory>
 #include "UITheme.h"
 #include "DarkStatusBar.h"
-#include "DarkPane.h"
 #include "TopBar.h"
 #include "MonitoringView.h"
 #include "IVisionModule.h"
+#include "LoggingPane.h"
+#include "DefectListPane.h"
+#include "ModelManagerPane.h"
+#include "Contracts/LoggerRegistry.h"
 
 #define ID_TOPBAR        1999
-#define ID_PANE_RESULTS  2000
-#define ID_PANE_OUTPUT   2001
+#define ID_PANE_LOG      2002
+#define ID_PANE_DEFECTS  2003
+#define ID_PANE_MODELS   2004
 
 // Base ID for views created by the active module
 #define ID_MODULE_VIEW_BASE  (AFX_IDW_PANE_FIRST + 10)
@@ -42,8 +46,9 @@ protected:
 	CDarkStatusBar  m_wndStatusBar;
 	CMonitoringView m_wndView;          // AFX_IDW_PANE_FIRST — placeholder for MFC layout engine
 	CTopBar         m_wndTopBar;
-	CDarkPane       m_wndResultsPane;
-	CDarkPane       m_wndOutputPane;
+	CLoggingPane      m_wndLogPane;
+	CDefectListPane   m_wndDefectPane;
+	CModelManagerPane m_wndModelPane;
 
 	// Module management
 	std::vector<std::unique_ptr<IVisionModule>> m_modules;
@@ -53,6 +58,7 @@ protected:
 	void RegisterModules();
 	void LoadModule(IVisionModule* pModule);
 	void ShowView(int navIndex);
+	void UpdatePaneVisibility(int navIndex);
 	void DestroyModuleViews();
 
 protected:
