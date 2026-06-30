@@ -18,15 +18,7 @@ void CModelManagerPane::OnSize(UINT nType, int cx, int cy)
     CDockablePane::OnSize(nType, cx, cy);
     Invalidate(FALSE);
     UpdateWindow();
-
-    static bool bInFrameUpdate = false;
-    if (!bInFrameUpdate)
-    {
-        bInFrameUpdate = true;
-        SetWindowPos(nullptr, 0, 0, 0, 0,
-            SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
-        bInFrameUpdate = false;
-    }
+    PostMessage(WM_NCPAINT, 1, 0);
 }
 
 BOOL CModelManagerPane::OnEraseBkgnd(CDC* pDC)

@@ -23,6 +23,7 @@ BOOL CMonitoringView::PreCreateWindow(CREATESTRUCT& cs)
 
 	cs.dwExStyle &= ~WS_EX_CLIENTEDGE;
 	cs.style     &= ~WS_BORDER;
+	cs.style     |= WS_CLIPSIBLINGS | WS_CLIPCHILDREN;
 	cs.lpszClass = AfxRegisterWndClass(CS_HREDRAW | CS_VREDRAW | CS_DBLCLKS,
 		::LoadCursor(nullptr, IDC_ARROW), (HBRUSH)::GetStockObject(NULL_BRUSH), nullptr);
 

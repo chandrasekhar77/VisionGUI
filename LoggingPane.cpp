@@ -106,18 +106,7 @@ void CLoggingPane::OnSize(UINT nType, int cx, int cy)
     if (!m_richEdit.m_hWnd) return;
 
     m_richEdit.MoveWindow(0, 0, cx, cy);
-
-    // SWP_FRAMECHANGED sends WM_NCCALCSIZE which marks the entire NC frame
-    // (including the caption) dirty before WM_NCPAINT fires, so GetWindowDC
-    // is not pre-clipped to just the bottom-border NC update region.
-    static bool bInFrameUpdate = false;
-    if (!bInFrameUpdate)
-    {
-        bInFrameUpdate = true;
-        SetWindowPos(nullptr, 0, 0, 0, 0,
-            SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
-        bInFrameUpdate = false;
-    }
+    PostMessage(WM_NCPAINT, 1, 0);
 }
 
 BOOL CLoggingPane::OnEraseBkgnd(CDC* pDC)

@@ -89,15 +89,7 @@ void CDefectListPane::OnSize(UINT nType, int cx, int cy)
     if (!m_list.m_hWnd) return;
 
     m_list.MoveWindow(0, 0, cx, cy);
-
-    static bool bInFrameUpdate = false;
-    if (!bInFrameUpdate)
-    {
-        bInFrameUpdate = true;
-        SetWindowPos(nullptr, 0, 0, 0, 0,
-            SWP_NOMOVE | SWP_NOSIZE | SWP_NOZORDER | SWP_NOACTIVATE | SWP_FRAMECHANGED);
-        bInFrameUpdate = false;
-    }
+    PostMessage(WM_NCPAINT, 1, 0);
 }
 
 BOOL CDefectListPane::OnEraseBkgnd(CDC* pDC)
