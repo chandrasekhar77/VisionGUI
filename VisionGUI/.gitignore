@@ -1,0 +1,26 @@
+# Build output
+x64/
+Debug/
+Release/
+*.obj
+*.pch
+*.idb
+*.pdb
+*.ilk
+*.exe
+*.dll
+*.lib
+*.exp
+*.res
+
+# Visual Studio
+.vs/
+*.user
+*.VC.db
+*.VC.opendb
+*.suo
+*.sdf
+*.opensdf
+ipch/
+*.tlog
+
