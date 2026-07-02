@@ -3,153 +3,153 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>VisionGUI — Architecture Documentation</title>
+<title>CIS-Platform — Architecture Documentation</title>
 <style>
+  /* ── Confluence-style light theme ── */
   :root {
-    --bg:       #1e1e1e;
-    --surface:  #252526;
-    --surface2: #2d2d2e;
-    --border:   #3a3a3a;
-    --accent:   #007acc;
-    --accent2:  #0e639c;
-    --green:    #3c8a3c;
-    --red:      #c42b1c;
-    --orange:   #c87137;
-    --text:     #d4d4d4;
-    --dim:      #9d9d9d;
-    --head:     #ffffff;
-    --radius:   6px;
+    --bg:        #ffffff;
+    --surface:   #f4f5f7;
+    --border:    #dfe1e6;
+    --accent:    #0052cc;
+    --accent-lt: #deebff;
+    --green:     #006644;
+    --green-lt:  #e3fcef;
+    --red:       #bf2600;
+    --red-lt:    #ffebe6;
+    --orange:    #ff8b00;
+    --orange-lt: #fffae6;
+    --text:      #172b4d;
+    --dim:       #5e6c84;
+    --head:      #091e42;
+    --radius:    4px;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
     background: var(--bg);
     color: var(--text);
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    font-size: 14px;
-    line-height: 1.65;
+    font-family: -apple-system, 'Segoe UI', Arial, sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
   }
 
   /* ── Top nav ── */
   nav {
     position: sticky; top: 0; z-index: 100;
-    background: var(--surface);
-    border-bottom: 1px solid var(--border);
+    background: #0052cc;
+    border-bottom: 1px solid #003d99;
     display: flex; align-items: center; gap: 4px;
-    padding: 0 24px; height: 44px;
+    padding: 0 24px; height: 46px;
   }
   nav a {
-    color: var(--dim); text-decoration: none;
-    padding: 6px 14px; border-radius: 20px;
-    font-size: 13px; white-space: nowrap;
+    color: rgba(255,255,255,.8); text-decoration: none;
+    padding: 6px 14px; border-radius: 3px;
+    font-size: 14px; white-space: nowrap;
     transition: background .15s, color .15s;
   }
-  nav a:hover { background: #3a3a3a; color: var(--text); }
-  nav a.active { background: var(--accent); color: #fff; }
-  .nav-title { font-weight: 600; color: var(--head); margin-right: 12px; font-size: 15px; }
+  nav a:hover { background: rgba(255,255,255,.15); color: #fff; }
+  nav a.active { background: rgba(255,255,255,.25); color: #fff; font-weight: 600; }
+  .nav-title { font-weight: 700; color: #fff; margin-right: 16px; font-size: 16px; }
 
   /* ── Layout ── */
-  .page { max-width: 1100px; margin: 0 auto; padding: 40px 24px 80px; }
-  section { margin-bottom: 64px; scroll-margin-top: 60px; }
+  .page { max-width: 1080px; margin: 0 auto; padding: 40px 24px 80px; }
+  section { margin-bottom: 56px; scroll-margin-top: 62px; }
 
   h1 { font-size: 28px; font-weight: 700; color: var(--head); margin-bottom: 6px; }
-  h2 { font-size: 20px; font-weight: 600; color: var(--head); margin-bottom: 16px; padding-bottom: 8px; border-bottom: 1px solid var(--border); }
-  h3 { font-size: 15px; font-weight: 600; color: var(--head); margin: 20px 0 10px; }
-  p  { margin-bottom: 12px; color: var(--text); }
+  h2 {
+    font-size: 20px; font-weight: 700; color: var(--head);
+    margin-bottom: 14px; padding-bottom: 8px;
+    border-bottom: 2px solid var(--accent);
+  }
+  h3 { font-size: 15px; font-weight: 700; color: var(--head); margin: 22px 0 10px; text-transform: uppercase; letter-spacing: .04em; }
+  p  { margin-bottom: 12px; }
   .subtitle { color: var(--dim); font-size: 14px; margin-bottom: 32px; }
 
   code {
-    font-family: 'Cascadia Code', 'Consolas', monospace;
-    font-size: 12px;
-    background: #2a2a2a;
+    font-family: 'SFMono-Regular', Consolas, 'Courier New', monospace;
+    font-size: 13px;
+    background: var(--surface);
     border: 1px solid var(--border);
     border-radius: 3px;
     padding: 1px 5px;
-    color: #ce9178;
+    color: #0052cc;
   }
   pre {
-    background: #1a1a1a;
+    background: #f4f5f7;
     border: 1px solid var(--border);
+    border-left: 4px solid #b3d4ff;
     border-radius: var(--radius);
-    padding: 16px 20px;
+    padding: 14px 18px;
     overflow-x: auto;
     margin-bottom: 16px;
-    font-family: 'Cascadia Code', 'Consolas', monospace;
-    font-size: 12px;
+    font-family: 'SFMono-Regular', Consolas, 'Courier New', monospace;
+    font-size: 13px;
     line-height: 1.6;
-    color: #d4d4d4;
+    color: #172b4d;
   }
-  pre .kw  { color: #569cd6; }
-  pre .cls { color: #4ec9b0; }
-  pre .cm  { color: #6a9955; }
-  pre .str { color: #ce9178; }
+  pre .kw  { color: #0052cc; font-weight: 600; }
+  pre .cls { color: #006644; }
+  pre .cm  { color: #5e6c84; font-style: italic; }
+  pre .str { color: #0052cc; }
 
-  ul { padding-left: 20px; margin-bottom: 12px; }
-  li { margin-bottom: 4px; }
+  ul { padding-left: 20px; margin: 4px 0; }
+  li { margin-bottom: 3px; font-size: 14px; }
 
-  /* ── Layer diagram ── */
-  .layer-stack { display: flex; flex-direction: column; gap: 6px; margin: 24px 0; }
-  .layer {
-    border-radius: var(--radius);
-    padding: 16px 20px;
-    border: 1px solid var(--border);
-    position: relative;
-  }
-  .layer-label {
-    font-size: 11px; font-weight: 700; letter-spacing: .08em;
-    text-transform: uppercase; opacity: .7; margin-bottom: 4px;
-  }
-  .layer-name { font-size: 15px; font-weight: 600; color: var(--head); }
-  .layer-desc { font-size: 12px; color: var(--dim); margin-top: 4px; }
-  .layer-files { font-size: 11px; color: var(--dim); margin-top: 6px; font-family: 'Consolas', monospace; }
-  .l1 { background: #1a2a3a; border-color: #2a5a8a; }
-  .l2 { background: #1a2e1a; border-color: #2a6a2a; }
-  .l3 { background: #2e1a1a; border-color: #6a2a2a; }
-  .l4 { background: #2a2a1a; border-color: #6a6a2a; }
-  .arrow { text-align: center; color: var(--dim); font-size: 18px; line-height: 1; }
-
-  /* ── Component table ── */
-  .tbl-wrap { overflow-x: auto; margin: 16px 0; }
-  table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  /* ── Tables ── */
+  .tbl-wrap { overflow-x: auto; margin: 14px 0; }
+  table { width: 100%; border-collapse: collapse; font-size: 14px; }
   thead th {
-    background: var(--surface2);
+    background: #f4f5f7;
     color: var(--head);
-    font-weight: 600;
+    font-weight: 700;
     padding: 10px 14px;
     text-align: left;
-    border-bottom: 2px solid var(--accent);
+    border: 1px solid var(--border);
     white-space: nowrap;
+    font-size: 13px;
+    text-transform: uppercase;
+    letter-spacing: .04em;
   }
+  th.sl { text-align: center; width: 60px; }
   tbody tr { border-bottom: 1px solid var(--border); }
-  tbody tr:hover { background: #2a2a2a; }
-  td { padding: 9px 14px; vertical-align: top; }
-  td:first-child { font-family: 'Consolas', monospace; font-size: 12px; color: #4ec9b0; }
-  .badge {
-    display: inline-block; border-radius: 12px;
-    padding: 2px 10px; font-size: 11px; font-weight: 600;
-    white-space: nowrap;
-  }
-  .done    { background: #1e3a1e; color: #4caf50; border: 1px solid #2e6a2e; }
-  .partial { background: #3a2a10; color: #ff9800; border: 1px solid #6a4a20; }
-  .stub    { background: #2a1a1a; color: #f44336; border: 1px solid #5a2a2a; }
-  .yes  { color: #4caf50; font-weight: 600; }
-  .no   { color: #f44336; font-weight: 600; }
-  .part { color: #ff9800; font-weight: 600; }
+  tbody tr:hover { background: #f8f9fa; }
+  td { padding: 9px 14px; vertical-align: top; border: 1px solid var(--border); }
+  td.sl { text-align: center; color: var(--dim); font-size: 13px; white-space: nowrap; }
+  td.mono { font-family: 'SFMono-Regular', Consolas, monospace; font-size: 13px; color: #0052cc; white-space: nowrap; }
 
-  /* ── Info cards ── */
-  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; margin: 20px 0; }
+  /* ── Status badges ── */
+  .badge {
+    display: inline-block; border-radius: 3px;
+    padding: 2px 8px; font-size: 12px; font-weight: 700;
+    white-space: nowrap; text-transform: uppercase; letter-spacing: .04em;
+  }
+  .done    { background: var(--green-lt);  color: var(--green);  border: 1px solid #abf5d1; }
+  .partial { background: var(--orange-lt); color: #974f0c;       border: 1px solid #ffe380; }
+  .stub    { background: var(--red-lt);    color: var(--red);    border: 1px solid #ffbdad; }
+  .yes  { color: var(--green);  font-weight: 700; }
+  .no   { color: var(--accent);  font-weight: 700; }
+  .part { color: #974f0c;        font-weight: 700; }
+
+  /* ── Overview cards ── */
+  .card-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; margin: 20px 0; }
   .card {
-    background: var(--surface);
+    background: var(--bg);
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 18px 20px;
+    padding: 16px 18px;
+    border-top: 3px solid var(--accent);
   }
-  .card h4 { font-size: 13px; font-weight: 700; color: var(--head); margin-bottom: 8px; }
-  .card p  { font-size: 12px; color: var(--dim); margin: 0; }
-  .card-accent { border-left: 3px solid var(--accent); }
-  .card-green  { border-left: 3px solid var(--green); }
-  .card-orange { border-left: 3px solid var(--orange); }
+  .card.c-green  { border-top-color: var(--green); }
+  .card.c-orange { border-top-color: var(--orange); }
+  .card h4 { font-size: 14px; font-weight: 700; color: var(--head); margin-bottom: 6px; }
+  .card p  { font-size: 13px; color: var(--dim); margin: 0; line-height: 1.5; }
+  .card .layer-tag {
+    display: inline-block; font-size: 11px; font-weight: 700;
+    text-transform: uppercase; letter-spacing: .06em;
+    background: var(--surface); color: var(--dim);
+    border-radius: 3px; padding: 1px 6px; margin-bottom: 8px;
+  }
 
-  /* ── Pane layout diagram ── */
+  /* ── UI layout diagram ── */
   .ui-layout {
     display: grid;
     grid-template-areas:
@@ -157,67 +157,71 @@
       "dashtb  dashtb  dashtb  dashtb"
       "image   center  main    defects"
       "log     log     log     log";
-    grid-template-columns: 200px 130px 1fr 200px;
-    grid-template-rows: 36px 32px 1fr 120px;
+    grid-template-columns: 190px 120px 1fr 190px;
+    grid-template-rows: 36px 30px 1fr 100px;
     gap: 3px;
-    background: var(--border);
-    border: 1px solid var(--border);
+    background: #dfe1e6;
+    border: 1px solid #dfe1e6;
     border-radius: var(--radius);
     padding: 3px;
-    height: 400px;
-    margin: 20px 0;
+    height: 380px;
+    margin: 16px 0;
     font-size: 11px;
-    font-family: 'Consolas', monospace;
+    font-family: Consolas, monospace;
   }
   .ui-cell {
-    border-radius: 3px;
+    border-radius: 2px;
     display: flex; flex-direction: column;
     align-items: center; justify-content: center;
-    text-align: center;
-    padding: 4px 6px;
-    color: var(--dim);
-    font-size: 10px;
-    gap: 3px;
+    text-align: center; padding: 4px 6px; gap: 3px;
+    color: var(--dim); font-size: 10px;
   }
-  .ui-cell strong { display: block; font-size: 11px; color: var(--head); }
-  .c-topbar  { grid-area: topbar;  background: #252526; }
-  .c-dashtb  { grid-area: dashtb;  background: #1e2a1e; }
-  .c-image   { grid-area: image;   background: #1a1a2a; }
-  .c-center  { grid-area: center;  background: #1e1e2e; }
-  .c-main    { grid-area: main;    background: #1a1a1a; }
-  .c-defects { grid-area: defects; background: #2a1a1a; }
-  .c-log     { grid-area: log;     background: #1a2a1a; }
+  .ui-cell strong { display: block; font-size: 11px; color: var(--head); font-weight: 700; }
+  .c-topbar  { grid-area: topbar;  background: #0052cc; color: #fff; }
+  .c-topbar strong { color: #fff; }
+  .c-dashtb  { grid-area: dashtb;  background: #e3fcef; }
+  .c-image   { grid-area: image;   background: #deebff; }
+  .c-center  { grid-area: center;  background: #f0f1f3; }
+  .c-main    { grid-area: main;    background: #fff; border: 1px solid #dfe1e6; }
+  .c-defects { grid-area: defects; background: #d5e6ff; }
+  .c-log     { grid-area: log;     background: #fffae6; }
 
   /* ── Message flow ── */
-  .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 12px 0; }
+  .flow { display: flex; align-items: center; flex-wrap: wrap; gap: 6px; margin: 10px 0; }
   .flow-box {
-    background: var(--surface2); border: 1px solid var(--border);
-    border-radius: 4px; padding: 5px 12px;
-    font-size: 12px; font-family: 'Consolas', monospace; color: #4ec9b0;
+    background: var(--surface); border: 1px solid var(--border);
+    border-radius: 3px; padding: 4px 12px;
+    font-size: 13px; font-family: Consolas, monospace; color: var(--head);
   }
-  .flow-arrow { color: var(--accent); font-size: 16px; }
-  .flow-msg { font-size: 11px; color: var(--dim); white-space: nowrap; }
+  .flow-arrow { color: var(--accent); font-size: 16px; font-weight: 700; }
+  .flow-msg { font-size: 12px; color: var(--dim); white-space: nowrap; }
 
-  /* ── Note boxes ── */
-  .note {
-    background: #1a2a3a; border: 1px solid #2a5a8a;
+  /* ── Info / warning panels ── */
+  .info {
+    background: var(--accent-lt); border: 1px solid #b3d4ff;
     border-left: 4px solid var(--accent);
     border-radius: var(--radius); padding: 12px 16px;
-    margin: 16px 0; font-size: 13px;
+    margin: 16px 0; font-size: 14px; color: #0747a6;
   }
   .warn {
-    background: #2e2010; border: 1px solid #6a4a20;
+    background: var(--orange-lt); border: 1px solid #ffe380;
     border-left: 4px solid var(--orange);
     border-radius: var(--radius); padding: 12px 16px;
-    margin: 16px 0; font-size: 13px; color: #ffa040;
+    margin: 16px 0; font-size: 14px; color: #7a4706;
+  }
+  .tip {
+    background: var(--green-lt); border: 1px solid #abf5d1;
+    border-left: 4px solid var(--green);
+    border-radius: var(--radius); padding: 12px 16px;
+    margin: 16px 0; font-size: 14px; color: #006644;
   }
 </style>
 </head>
 <body>
 
 <nav>
-  <span class="nav-title">VisionGUI</span>
-  <a href="#overview"    class="active">Overview</a>
+  <span class="nav-title">CIS-Platform</span>
+  <a href="#overview" class="active">Overview</a>
   <a href="#layers">4-Layer Architecture</a>
   <a href="#components">Components</a>
   <a href="#reuse">Multi-Project Reuse</a>
@@ -228,40 +232,42 @@
 
 <div class="page">
 
-  <h1>VisionGUI — Platform Architecture</h1>
-  <p class="subtitle">4-Layer Vision Inspection Platform · MFC / C++ · Win32</p>
+  <h1>CIS-Platform — Architecture Documentation</h1>
+  <p class="subtitle">4-Layer Vision Inspection Platform &nbsp;·&nbsp; MFC / C++ &nbsp;·&nbsp; Win32</p>
 
   <!-- ══════════════════════════════════════════════ -->
   <section id="overview">
     <h2>Overview</h2>
     <p>
-      VisionGUI is a <strong>shell-and-module</strong> desktop platform for industrial vision inspection.
-      The shell provides the entire UI frame, docking infrastructure, navigation, and logging.
-      Application-specific logic is encapsulated in interchangeable <em>modules</em> that plug into
-      the shell through a clean C++ interface (<code>IVisionModule</code>).
+      CIS-Platform is a <strong>4-layer industrial vision inspection platform</strong>.
+      Each layer has a single responsibility and communicates with adjacent layers through
+      well-defined interfaces, so any layer can be replaced independently.
     </p>
     <p>
-      The platform is divided into four vertical layers. Each layer communicates with the one
-      above and below it through well-defined contracts (pure virtual interfaces and POD structs),
-      so any layer can be replaced or extended without touching the others.
+      Data flows bottom-up: L1 captures raw hardware signals → L2 processes images and runs algorithms →
+      L3 applies business logic and sequencing → L4 presents results and accepts operator input.
     </p>
 
     <div class="card-grid">
-      <div class="card card-accent">
-        <h4>Shell (L1)</h4>
-        <p>MFC frame, dark-themed dockable panes, top navigation bar, window chrome. Knows nothing about inspection.</p>
+      <div class="card">
+        <span class="layer-tag">L1</span>
+        <h4>Hardware Abstraction Layer</h4>
+        <p>Camera, light controller, IO devices, and the hardware abstraction engine that normalises all physical I/O.</p>
       </div>
-      <div class="card card-green">
-        <h4>Module / Sequence (L2)</h4>
-        <p>Active application module implementing IVisionModule. Controls Connect / Start / Stop state machine and owns the inspection sequence.</p>
+      <div class="card c-green">
+        <span class="layer-tag">L2</span>
+        <h4>Image Processing &amp; Algorithm Layer</h4>
+        <p>Image processing engine, rule-based algorithms (OpenCV), AI / deep-learning inference, MIL integration.</p>
       </div>
-      <div class="card card-orange">
-        <h4>Vision Engine (L3)</h4>
-        <p>Model data (CPCBModel / ROI), inspection algorithms, image acquisition, DL inference. Fully decoupled from UI.</p>
+      <div class="card c-orange">
+        <span class="layer-tag">L3</span>
+        <h4>Application &amp; Business Layer</h4>
+        <p>Sequence &amp; process controller, pass/fail decision logic, MES / DB / factory server integration.</p>
       </div>
-      <div class="card card-accent">
-        <h4>Data Display (L4)</h4>
-        <p>Individual dockable panes (defect list, logging, stats, image viewer) that react to events posted from L2/L3 via Windows messages.</p>
+      <div class="card">
+        <span class="layer-tag">L4</span>
+        <h4>UI / Management Layer</h4>
+        <p>HMI, dashboard, real-time result display, recipe system, statistics and defect log.</p>
       </div>
     </div>
   </section>
@@ -270,55 +276,122 @@
   <section id="layers">
     <h2>4-Layer Architecture</h2>
 
-    <div class="layer-stack">
-      <div class="layer l1">
-        <div class="layer-label">Layer 1 — Shell / UI Container</div>
-        <div class="layer-name">CMainFrame &nbsp;·&nbsp; CTopBar &nbsp;·&nbsp; CDarkPane &nbsp;·&nbsp; CDarkStatusBar</div>
-        <div class="layer-desc">
-          Hosts all dockable panes and module views. Owns the docking framework, window chrome (custom NC), dark mode DWM integration, and top navigation. Never contains business logic.
-        </div>
-        <div class="layer-files">MainFrm.cpp · TopBar.cpp · DarkPane.cpp · DarkStatusBar.cpp · DarkPaneDivider.cpp · VisionVisualManager.cpp</div>
-      </div>
-      <div class="arrow">↕</div>
-      <div class="layer l2">
-        <div class="layer-label">Layer 2 — Module / Sequence Controller</div>
-        <div class="layer-name">IVisionModule &nbsp;·&nbsp; CInspectionModule</div>
-        <div class="layer-desc">
-          Implements the application-level state machine (connect → start → inspect → stop). Creates nav tab views on demand. Posts defect / panel / log events to L4 panes. Communicates with L3 for image capture and algorithm execution.
-        </div>
-        <div class="layer-files">IVisionModule.h · InspectionModule.cpp · InspectionModule.h</div>
-      </div>
-      <div class="arrow">↕</div>
-      <div class="layer l3">
-        <div class="layer-label">Layer 3 — Vision / Algorithm Engine</div>
-        <div class="layer-name">CPCBModel &nbsp;·&nbsp; ROI &nbsp;·&nbsp; HiResImageRenderer &nbsp;·&nbsp; D3DRenderer</div>
-        <div class="layer-desc">
-          Owns the inspection model (ROI definitions, algorithm selection, tolerances). Performs image acquisition, preprocessing, and defect classification. Exposes results through the IDefectListListener and ILogger contracts. Can run on a worker thread.
-        </div>
-        <div class="layer-files">PCBModel.cpp · PCBModel.h · HiResImageRenderer/ · D3DRenderer.cpp · CImagePanel.cpp · D3DImageViewerCtrl.cpp</div>
-      </div>
-      <div class="arrow">↕</div>
-      <div class="layer l4">
-        <div class="layer-label">Layer 4 — Data Display Panes / Contracts</div>
-        <div class="layer-name">CDefectListPane &nbsp;·&nbsp; CLoggingPane &nbsp;·&nbsp; CPanelListPane &nbsp;·&nbsp; CStatsPane &nbsp;·&nbsp; CYieldChartPane &nbsp;·&nbsp; CModelManagerPane</div>
-        <div class="layer-desc">
-          Each pane is an independent CDockablePane that listens for Windows messages (WM_DEFECT_ADDED, WM_LOG_MESSAGE, WM_PANEL_ADDED …) or implements a contract interface (IDefectListListener, ILogger). Panes do not call L2/L3 directly.
-        </div>
-        <div class="layer-files">DefectListPane.cpp · LoggingPane.cpp · PanelListPane.cpp · StatsPane.cpp · YieldChartPane.cpp · DefectSummaryPane.cpp · ModelManagerPane.cpp · Contracts/</div>
-      </div>
+    <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th class="sl">Sl. No</th>
+          <th style="width:22%">Layer</th>
+          <th style="width:28%">Key Components</th>
+          <th>Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td class="sl">1</td>
+          <td><strong>L1 — Hardware Abstraction Layer</strong></td>
+          <td>
+            <ul>
+              <li>Hardware Abstraction Engine</li>
+              <li>Camera (GigE / USB3 Vision)</li>
+              <li>Light Controller</li>
+              <li>IO Devices</li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li>Normalises all physical hardware behind a uniform interface</li>
+              <li>Abstracts camera SDK, lighting protocols, and digital I/O</li>
+              <li>Shields upper layers from hardware vendor differences</li>
+              <li>Connects to L2 via Hardware Abstraction Engine → Image Processing Engine</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td class="sl">2</td>
+          <td><strong>L2 — Image Processing &amp; Algorithm Layer</strong></td>
+          <td>
+            <ul>
+              <li>Image Processing Engine</li>
+              <li>Rule-Based Algorithms (OpenCV)</li>
+              <li>AI / Deep Learning Inference</li>
+              <li>MIL / OpenCV Integration</li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li>Receives raw images from L1 and runs inspection algorithms</li>
+              <li>Rule-based path: classical image processing (thresholding, blob, edge)</li>
+              <li>AI path: deep-learning model inference (classification / detection)</li>
+              <li>Exposes results upward to L3 via Image Processing Engine interface</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td class="sl">3</td>
+          <td><strong>L3 — Application &amp; Business Layer</strong></td>
+          <td>
+            <ul>
+              <li>Sequence &amp; Process Controller</li>
+              <li>Pass / Fail Logic</li>
+              <li>MES / DB / Factory Server</li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li>Drives the full inspection cycle (connect → trigger → inspect → record)</li>
+              <li>Applies tolerance rules and emits final pass / fail verdict</li>
+              <li>Pushes results to MES, factory DB, or external reporting systems</li>
+              <li>Connects to L1 via Hardware Abstraction Engine and to L2 via Image Processing Engine</li>
+            </ul>
+          </td>
+        </tr>
+        <tr>
+          <td class="sl">4</td>
+          <td><strong>L4 — UI / Management Layer</strong></td>
+          <td>
+            <ul>
+              <li>HMI (CMainFrame, CTopBar)</li>
+              <li>Dashboard</li>
+              <li>Real-time Result Display</li>
+              <li>Recipe System</li>
+              <li>Statistics &amp; Defect Log</li>
+            </ul>
+          </td>
+          <td>
+            <ul>
+              <li>Operator-facing HMI — navigation, controls, status</li>
+              <li>Real-time display of inspection results and defect images</li>
+              <li>Recipe management — create, load, edit, duplicate inspection models</li>
+              <li>Statistics, yield charts, and timestamped defect log</li>
+              <li>Connects to L3 Sequence &amp; Process Controller for commands and results</li>
+            </ul>
+          </td>
+        </tr>
+      </tbody>
+    </table>
     </div>
 
     <h3>Contract Interfaces (between layers)</h3>
     <div class="tbl-wrap">
     <table>
-      <thead><tr><th>Interface</th><th>Defined in</th><th>Implemented by</th><th>Used by</th><th>Purpose</th></tr></thead>
+      <thead>
+        <tr>
+          <th class="sl">Sl. No</th>
+          <th>Interface</th>
+          <th>Defined in</th>
+          <th>Implemented by</th>
+          <th>Used by</th>
+          <th>Purpose</th>
+        </tr>
+      </thead>
       <tbody>
-        <tr><td>IVisionModule</td><td>IVisionModule.h</td><td>CInspectionModule</td><td>CMainFrame, CTopBar</td><td>Shell-to-module boundary; nav tabs, views, actions</td></tr>
-        <tr><td>IDefectListListener</td><td>Contracts/IDefectListListener.h</td><td>CDefectListPane</td><td>L2 SequenceController</td><td>Thread-safe defect push from worker to UI pane</td></tr>
-        <tr><td>IModelLoader</td><td>Contracts/IModelLoader.h</td><td>L3 model repository</td><td>CModelManagerPane, L2</td><td>Load / save / list inspection models</td></tr>
-        <tr><td>ILogger</td><td>Contracts/ILogger.h</td><td>CLoggingPane</td><td>All layers via VisionLog::Info()</td><td>Decoupled logging; thread-safe via PostMessage</td></tr>
-        <tr><td>LoggerRegistry</td><td>Contracts/LoggerRegistry.h</td><td>CLoggingPane</td><td>Any caller</td><td>Global logger singleton registered at startup</td></tr>
-        <tr><td>IPanelListListener</td><td>Contracts/IPanelListListener.h</td><td>CPanelListPane</td><td>L2 SequenceController</td><td>Push completed panel records to panel list pane</td></tr>
+        <tr><td class="sl">1</td><td class="mono">IVisionModule</td><td><code>IVisionModule.h</code></td><td>CInspectionModule</td><td>CMainFrame, CTopBar</td><td>UI Container-to-module boundary; nav tabs, views, actions</td></tr>
+        <tr><td class="sl">2</td><td class="mono">IDefectListListener</td><td><code>Contracts/IDefectListListener.h</code></td><td>CDefectListPane</td><td>L2 SequenceController</td><td>Thread-safe defect push from worker to UI pane</td></tr>
+        <tr><td class="sl">3</td><td class="mono">IModelLoader</td><td><code>Contracts/IModelLoader.h</code></td><td>L3 model repository</td><td>CModelManagerPane, L2</td><td>Load / save / list inspection models</td></tr>
+        <tr><td class="sl">4</td><td class="mono">ILogger</td><td><code>Contracts/ILogger.h</code></td><td>CLoggingPane</td><td>All layers</td><td>Decoupled logging; thread-safe via PostMessage</td></tr>
+        <tr><td class="sl">5</td><td class="mono">LoggerRegistry</td><td><code>Contracts/LoggerRegistry.h</code></td><td>CLoggingPane</td><td>Any caller</td><td>Global logger singleton registered at startup</td></tr>
+        <tr><td class="sl">6</td><td class="mono">IPanelListListener</td><td><code>Contracts/IPanelListListener.h</code></td><td>CPanelListPane</td><td>L2 SequenceController</td><td>Push completed panel records to panel list pane</td></tr>
       </tbody>
     </table>
     </div>
@@ -328,83 +401,94 @@
   <section id="components">
     <h2>Component Implementation Status</h2>
 
-    <h3>L1 — Shell / UI Container</h3>
+    <h3>L1 — Hardware Abstraction Layer</h3>
     <div class="tbl-wrap">
     <table>
-      <thead><tr><th>Component</th><th>File(s)</th><th>Status</th><th>Multi-Project?</th><th>Description</th></tr></thead>
+      <thead>
+        <tr><th class="sl">Sl. No</th><th>Component</th><th>File(s)</th><th>Status</th><th>Multi-Project?</th><th>Description</th></tr>
+      </thead>
       <tbody>
-        <tr><td>CMainFrame</td><td>MainFrm.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>Frame, docking, module loading, pane visibility rules</td></tr>
-        <tr><td>CTopBar</td><td>TopBar.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>Custom title bar with pill nav tabs, action buttons, window controls</td></tr>
-        <tr><td>CDarkPane</td><td>DarkPane.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>Base dockable pane with dark background — all panes inherit this</td></tr>
-        <tr><td>CDarkStatusBar</td><td>DarkStatusBar.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>Dark-themed MFC status bar</td></tr>
-        <tr><td>CDarkPaneDivider</td><td>DarkPaneDivider.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>Dark splitter divider between docked panes</td></tr>
-        <tr><td>CDarkHeaderCtrl</td><td>DarkHeaderCtrl.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>Dark-themed list-view header for CDarkPane list panes</td></tr>
-        <tr><td>CVisionVisualManager</td><td>VisionVisualManager.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>MFC visual manager override for dark theming throughout</td></tr>
-        <tr><td>Custom NC chrome</td><td>MainFrm.cpp</td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>Custom resize handles, caption area, DWM dark mode</td></tr>
-        <tr><td>UITheme constants</td><td>UITheme.h</td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>All colors, sizes, WM_APP message IDs in one place</td></tr>
+        <tr><td class="sl">1</td><td>Hardware Abstraction Engine</td><td>—</td><td><span class="badge stub">Not Implemented</span></td><td class="yes">Yes</td><td>
+          <ul><li>Unified interface to all physical devices</li><li>Connects to L2 Image Processing Engine and to L3 Sequence Controller</li></ul>
+        </td></tr>
+        <tr><td class="sl">2</td><td>Camera</td><td>—</td><td><span class="badge stub">Not Implemented</span></td><td class="yes">Yes</td><td>
+          <ul><li>GigE Vision / USB3 Vision camera SDK integration</li><li>Trigger, acquisition, and image delivery to L2</li></ul>
+        </td></tr>
+        <tr><td class="sl">3</td><td>Light Controller</td><td>—</td><td><span class="badge stub">Not Implemented</span></td><td class="yes">Yes</td><td>
+          <ul><li>Illumination channel selection and intensity control</li><li>Serial / USB protocol to hardware lighting unit</li></ul>
+        </td></tr>
+        <tr><td class="sl">4</td><td>IO Devices</td><td>—</td><td><span class="badge stub">Not Implemented</span></td><td class="yes">Yes</td><td>
+          <ul><li>Digital I/O for triggers, conveyors, alarms</li><li>Abstracted behind the Hardware Abstraction Engine</li></ul>
+        </td></tr>
       </tbody>
     </table>
     </div>
 
-    <h3>L2 — Module / Sequence Controller</h3>
+    <h3>L2 — Image Processing &amp; Algorithm Layer</h3>
     <div class="tbl-wrap">
     <table>
-      <thead><tr><th>Component</th><th>File(s)</th><th>Status</th><th>Multi-Project?</th><th>Description</th></tr></thead>
+      <thead>
+        <tr><th class="sl">Sl. No</th><th>Component</th><th>File(s)</th><th>Status</th><th>Multi-Project?</th><th>Description</th></tr>
+      </thead>
       <tbody>
-        <tr><td>IVisionModule</td><td>IVisionModule.h</td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>Pure interface — the shell-module contract</td></tr>
-        <tr><td>CInspectionModule</td><td>InspectionModule.cpp/h</td><td><span class="badge partial">Skeleton</span></td><td class="no">No — PCB specific</td><td>5-tab inspection module; Connect/Start/Stop state, creates views</td></tr>
-        <tr><td>SequenceController</td><td>—</td><td><span class="badge stub">Not Implemented</span></td><td class="no">No</td><td>Worker thread that drives camera → algorithm → results cycle</td></tr>
-        <tr><td>Camera Integration</td><td>—</td><td><span class="badge stub">Not Implemented</span></td><td class="no">No</td><td>Real camera SDK calls (GigE/USB3 Vision)</td></tr>
-        <tr><td>Lighting Control</td><td>—</td><td><span class="badge stub">Not Implemented</span></td><td class="no">No</td><td>Hardware light controller (serial/USB)</td></tr>
+        <tr><td class="sl">1</td><td>Image Processing Engine</td><td>—</td><td><span class="badge stub">Not Implemented</span></td><td class="yes">Yes</td><td>
+          <ul><li>Receives raw images from L1 Hardware Abstraction Engine</li><li>Dispatches to rule-based or AI algorithm pipeline</li><li>Returns structured results to L3</li></ul>
+        </td></tr>
+        <tr><td class="sl">2</td><td>Rule-Based Algorithms (OpenCV)</td><td>—</td><td><span class="badge stub">Not Implemented</span></td><td class="yes">Yes</td><td>
+          <ul><li>Classical image processing: thresholding, blob, edge detection</li><li>OpenCV or MIL library calls</li></ul>
+        </td></tr>
+        <tr><td class="sl">3</td><td>AI / Deep Learning Inference</td><td>—</td><td><span class="badge stub">Not Implemented</span></td><td class="yes">Yes</td><td>
+          <ul><li>Deep-learning model inference (classification / object detection)</li><li>ONNX / TensorRT or vendor SDK integration</li></ul>
+        </td></tr>
+        <tr><td class="sl">4</td><td>MIL / OpenCV Integration</td><td>—</td><td><span class="badge stub">Not Implemented</span></td><td class="yes">Yes</td><td>
+          <ul><li>Third-party vision library adapters</li><li>Matrox MIL or OpenCV as interchangeable backend</li></ul>
+        </td></tr>
       </tbody>
     </table>
     </div>
 
-    <h3>L3 — Vision / Algorithm Engine</h3>
+    <h3>L3 — Application &amp; Business Layer</h3>
     <div class="tbl-wrap">
     <table>
-      <thead><tr><th>Component</th><th>File(s)</th><th>Status</th><th>Multi-Project?</th><th>Description</th></tr></thead>
+      <thead>
+        <tr><th class="sl">Sl. No</th><th>Component</th><th>File(s)</th><th>Status</th><th>Multi-Project?</th><th>Description</th></tr>
+      </thead>
       <tbody>
-        <tr><td>CPCBModel</td><td>PCBModel.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="no">No — PCB specific</td><td>Inspection model: name, golden image path, ROI list, Save/Load</td></tr>
-        <tr><td>ROI struct</td><td>PCBModel.h</td><td><span class="badge done">Implemented</span></td><td class="no">No</td><td>Per-region inspection config: bounds, InspectionType, AlgorithmEngine, lighting, tolerance</td></tr>
-        <tr><td>CImagePanel</td><td>CImagePanel.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>Interactive image panel with ROI drawing, zoom, WM_ROI_ADDED/SELECTED events</td></tr>
-        <tr><td>D3DImageViewerCtrl</td><td>D3DImageViewerCtrl.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>Direct3D 11 accelerated image display control</td></tr>
-        <tr><td>HiResImageRenderer</td><td>HiResImageRenderer/</td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>High-resolution D3D11 image renderer with shape overlay (DLL/lib)</td></tr>
-        <tr><td>D3DRenderer</td><td>HiResImageRenderer/D3DRenderer.cpp</td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>Core D3D11 swap chain, texture upload, shape rendering</td></tr>
-        <tr><td>ShapeManager</td><td>HiResImageRenderer/ShapeManager.cpp</td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>Overlay shapes (ROI rectangles, defect markers) on top of image</td></tr>
-        <tr><td>Inspection Algorithms</td><td>—</td><td><span class="badge stub">Not Implemented</span></td><td class="no">No</td><td>Rule-based and deep-learning defect classifiers</td></tr>
-        <tr><td>Barcode Reader</td><td>—</td><td><span class="badge stub">Not Implemented</span></td><td class="no">No</td><td>Board / lot ID reading via barcode SDK</td></tr>
+        <tr><td class="sl">1</td><td>Sequence &amp; Process Controller</td><td><code>InspectionModule.cpp/h</code> · <code>IVisionModule.h</code></td><td><span class="badge partial">Skeleton</span></td><td class="no">No — product specific</td><td>
+          <ul><li>Drives the full inspection cycle: connect → trigger → inspect → record</li><li>Connects to L1 via Hardware Abstraction Engine</li><li>Connects to L2 via Image Processing Engine</li><li>Sends results to L4 HMI and MES/DB</li></ul>
+        </td></tr>
+        <tr><td class="sl">2</td><td>Pass / Fail Logic</td><td>—</td><td><span class="badge stub">Not Implemented</span></td><td class="no">No — product specific</td><td>
+          <ul><li>Applies tolerance rules from the active recipe</li><li>Emits final pass / fail verdict per panel / board</li></ul>
+        </td></tr>
+        <tr><td class="sl">3</td><td>MES / DB / Factory Server</td><td>—</td><td><span class="badge stub">Not Implemented</span></td><td class="no">No — site specific</td><td>
+          <ul><li>Pushes inspection results to manufacturing execution system</li><li>Writes defect records and yield data to factory database</li></ul>
+        </td></tr>
       </tbody>
     </table>
     </div>
 
-    <h3>L4 — Data Display Panes</h3>
+    <h3>L4 — UI / Management Layer</h3>
     <div class="tbl-wrap">
     <table>
-      <thead><tr><th>Component</th><th>File(s)</th><th>Status</th><th>Multi-Project?</th><th>Description</th></tr></thead>
+      <thead>
+        <tr><th class="sl">Sl. No</th><th>Component</th><th>File(s)</th><th>Status</th><th>Multi-Project?</th><th>Description</th></tr>
+      </thead>
       <tbody>
-        <tr><td>CLoggingPane</td><td>LoggingPane.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>Real-time log viewer; implements ILogger; thread-safe via PostMessage</td></tr>
-        <tr><td>CDefectListPane</td><td>DefectListPane.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="part">Partial</td><td>Dark list-view of defects; implements IDefectListListener; posts WM_DEFECT_SELECTED</td></tr>
-        <tr><td>CDefectSummaryPane</td><td>DefectSummaryPane.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="part">Partial</td><td>Defect count summary per type/severity for current panel</td></tr>
-        <tr><td>CPanelListPane</td><td>PanelListPane.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="no">No — PCB specific</td><td>List of inspected panels in current lot; listens for WM_PANEL_ADDED</td></tr>
-        <tr><td>CStatsPane</td><td>StatsPane.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="part">Partial</td><td>Running statistics: yield %, defect rate, throughput</td></tr>
-        <tr><td>CYieldChartPane</td><td>YieldChartPane.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="part">Partial</td><td>Today's yield trend chart (GDI+ bar/line)</td></tr>
-        <tr><td>CModelManagerPane</td><td>ModelManagerPane.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>Toolbar + list for Load / New / Delete / Duplicate inspection models</td></tr>
-        <tr><td>CInspectionImagePane</td><td>InspectionImagePane.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>Dockable pane wrapper hosting D3DImageViewerCtrl for live inspection feed</td></tr>
-        <tr><td>CPerfMonitor</td><td>PerfMonitor.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>CPU / frame-time performance sampling utility</td></tr>
-      </tbody>
-    </table>
-    </div>
-
-    <h3>Dashboard / Navigation UI</h3>
-    <div class="tbl-wrap">
-    <table>
-      <thead><tr><th>Component</th><th>File(s)</th><th>Status</th><th>Multi-Project?</th><th>Description</th></tr></thead>
-      <tbody>
-        <tr><td>CMonitoringView</td><td>MonitoringView.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="part">Partial</td><td>Dashboard tab content area hosting CDashboardTabStrip and sub-view stubs</td></tr>
-        <tr><td>CDashboardTabStrip</td><td>DashboardTabStrip.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>4-sub-tab strip (Main View / Camera / Light / Inspect) inside Dashboard</td></tr>
-        <tr><td>CDashboardToolbar</td><td>DashboardToolbar.cpp/h</td><td><span class="badge done">Implemented</span></td><td class="part">Partial</td><td>Second top row (lot ID, board ID, channel selector, save, apply)</td></tr>
-        <tr><td>CContentView</td><td>ContentView.cpp/h</td><td><span class="badge partial">Skeleton</span></td><td class="yes">Yes</td><td>Placeholder CWnd used for Results / Recipe / Statistics / Config tabs</td></tr>
+        <tr><td class="sl">1</td><td>HMI</td><td><code>MainFrm.cpp/h</code> · <code>TopBar.cpp/h</code></td><td><span class="badge done">Implemented</span></td><td class="yes">Yes</td><td>
+          <ul><li>MFC frame with dockable pane layout</li><li>Top nav bar with pill tabs and Connect / Start / Stop controls</li><li>Dark-themed custom NC chrome and DWM dark mode</li></ul>
+        </td></tr>
+        <tr><td class="sl">2</td><td>Dashboard</td><td><code>MonitoringView.cpp/h</code> · <code>DashboardTabStrip.cpp/h</code> · <code>DashboardToolbar.cpp/h</code></td><td><span class="badge partial">Skeleton</span></td><td class="part">Partial</td><td>
+          <ul><li>Dashboard tab with 4 sub-tabs: Main View / Camera / Light / Inspect</li><li>Second toolbar row with lot ID, board ID, channel selector</li></ul>
+        </td></tr>
+        <tr><td class="sl">3</td><td>Real-time Result Display</td><td><code>DefectListPane.cpp/h</code> · <code>DefectSummaryPane.cpp/h</code> · <code>InspectionImagePane.cpp/h</code> · <code>D3DImageViewerCtrl.cpp/h</code></td><td><span class="badge partial">Skeleton</span></td><td class="part">Partial</td><td>
+          <ul><li>Live defect list with severity, ROI name, coordinates</li><li>D3D11 high-res image viewer with defect overlays</li><li>Defect summary count per type / severity</li></ul>
+        </td></tr>
+        <tr><td class="sl">4</td><td>Recipe System</td><td><code>ModelManagerPane.cpp/h</code> · <code>PCBModel.cpp/h</code></td><td><span class="badge partial">Skeleton</span></td><td class="part">Partial</td><td>
+          <ul><li>Load, create, duplicate, delete inspection recipes</li><li>ROI editor with per-region algorithm and tolerance settings</li><li>Model data: name, golden image, ROI list, Save/Load</li></ul>
+        </td></tr>
+        <tr><td class="sl">5</td><td>Statistics &amp; Defect Log</td><td><code>StatsPane.cpp/h</code> · <code>YieldChartPane.cpp/h</code> · <code>LoggingPane.cpp/h</code> · <code>PanelListPane.cpp/h</code></td><td><span class="badge partial">Skeleton</span></td><td class="part">Partial</td><td>
+          <ul><li>Yield %, defect rate, and throughput counters</li><li>Today's yield trend chart (GDI+ bar / line)</li><li>Timestamped system log from all layers via ILogger</li><li>Inspected panel list for the current lot</li></ul>
+        </td></tr>
       </tbody>
     </table>
     </div>
@@ -413,32 +497,39 @@
   <!-- ══════════════════════════════════════════════ -->
   <section id="reuse">
     <h2>Multi-Project Reuse</h2>
-    <p>The platform is intentionally split into a reusable shell and a project-specific module. The table below shows which parts transfer across projects unchanged.</p>
+    <p>
+      The platform is split into a reusable UI container layer and a project-specific module layer.
+      The table below shows which parts transfer across products unchanged.
+    </p>
 
     <div class="tbl-wrap">
     <table>
-      <thead><tr><th>Part</th><th>Reusable across projects?</th><th>What changes per project</th></tr></thead>
+      <thead>
+        <tr><th class="sl">Sl. No</th><th>Component / Layer</th><th>Reusable?</th><th>What changes per project</th></tr>
+      </thead>
       <tbody>
-        <tr><td>L1 Shell (CMainFrame, CTopBar, CDarkPane, …)</td><td class="yes">Yes — fully reusable</td><td>Nothing. The shell has no product knowledge.</td></tr>
-        <tr><td>IVisionModule interface</td><td class="yes">Yes — core contract</td><td>Nothing. It is the extension point.</td></tr>
-        <tr><td>UITheme.h (colors, sizes, WM_APP IDs)</td><td class="yes">Yes</td><td>Color constants can be adjusted per brand.</td></tr>
-        <tr><td>CImagePanel / D3DImageViewerCtrl</td><td class="yes">Yes</td><td>Nothing — generic image+ROI viewer.</td></tr>
-        <tr><td>HiResImageRenderer (DLL)</td><td class="yes">Yes</td><td>Nothing — generic D3D11 image renderer.</td></tr>
-        <tr><td>CLoggingPane / ILogger</td><td class="yes">Yes</td><td>Nothing — generic text log viewer.</td></tr>
-        <tr><td>CModelManagerPane / IModelLoader</td><td class="yes">Yes</td><td>The IModelLoader implementation is product-specific.</td></tr>
-        <tr><td>CPerfMonitor</td><td class="yes">Yes</td><td>Nothing — generic utility.</td></tr>
-        <tr><td>CInspectionModule</td><td class="no">No — PCB inspection specific</td><td>Replaced entirely by a new IVisionModule implementation.</td></tr>
-        <tr><td>CPCBModel / ROI</td><td class="no">No — PCB model specific</td><td>Replaced with product's own model data structure.</td></tr>
-        <tr><td>CPanelListPane / DefectInfo</td><td class="part">Partial</td><td>DefectInfo schema and CPanelListPane columns are PCB-specific; concept is reusable.</td></tr>
-        <tr><td>CStatsPane / CYieldChartPane</td><td class="part">Partial</td><td>Chart layout reusable; data fields are product-specific.</td></tr>
-        <tr><td>Inspection algorithms (L3)</td><td class="no">No</td><td>Replaced entirely per product.</td></tr>
+        <tr><td class="sl">1</td><td>L1 UI Container (CMainFrame, CTopBar, CDarkPane, …)</td><td class="yes">Yes — fully reusable</td><td>Nothing. No product knowledge in the UI container.</td></tr>
+        <tr><td class="sl">2</td><td>IVisionModule interface</td><td class="yes">Yes — core contract</td><td>Nothing. It is the extension point.</td></tr>
+        <tr><td class="sl">3</td><td>UITheme.h</td><td class="yes">Yes</td><td>Colour constants can be adjusted per brand.</td></tr>
+        <tr><td class="sl">4</td><td>CImagePanel / D3DImageViewerCtrl</td><td class="yes">Yes</td><td>Nothing — generic image + ROI viewer.</td></tr>
+        <tr><td class="sl">5</td><td>HiResImageRenderer (DLL)</td><td class="yes">Yes</td><td>Nothing — generic D3D11 image renderer.</td></tr>
+        <tr><td class="sl">6</td><td>CLoggingPane / ILogger</td><td class="yes">Yes</td><td>Nothing — generic text log viewer.</td></tr>
+        <tr><td class="sl">7</td><td>CModelManagerPane / IModelLoader</td><td class="yes">Yes</td><td>Only the IModelLoader implementation is product-specific.</td></tr>
+        <tr><td class="sl">8</td><td>CPerfMonitor</td><td class="yes">Yes</td><td>Nothing — generic utility.</td></tr>
+        <tr><td class="sl">9</td><td>CInspectionModule</td><td class="no">No — PCB specific</td><td>Replaced entirely with a new IVisionModule for the new product.</td></tr>
+        <tr><td class="sl">10</td><td>CPCBModel / ROI</td><td class="no">No — PCB specific</td><td>Replaced with the product's own model data structure.</td></tr>
+        <tr><td class="sl">11</td><td>CPanelListPane / DefectInfo</td><td class="part">Partial</td><td>Schema and columns are PCB-specific; the concept is reusable.</td></tr>
+        <tr><td class="sl">12</td><td>CStatsPane / CYieldChartPane</td><td class="part">Partial</td><td>Chart layout reusable; data fields are product-specific.</td></tr>
+        <tr><td class="sl">13</td><td>Inspection algorithms (L3)</td><td class="no">No</td><td>Replaced entirely per product.</td></tr>
       </tbody>
     </table>
     </div>
 
-    <div class="note">
-      <strong>Summary:</strong> The entire L1 shell, all contracts, the image viewer, and the logging system transfer to a new project with zero changes.
-      To create a new product, you implement <code>IVisionModule</code> (and optionally <code>IModelLoader</code>, <code>IDefectListListener</code>) and register it in <code>RegisterModules()</code>.
+    <div class="tip">
+      <strong>Summary:</strong> L1 UI container, all contract interfaces, the image viewer, and the logging system
+      transfer to a new project with zero changes. Implement <code>IVisionModule</code>
+      (and optionally <code>IModelLoader</code>, <code>IDefectListListener</code>) and register it in
+      <code>CMainFrame::RegisterModules()</code>.
     </div>
   </section>
 
@@ -447,22 +538,22 @@
     <h2>Module Independence &amp; Replaceability</h2>
 
     <p>
-      The shell and the module are isolated by the <code>IVisionModule</code> interface.
-      The shell never <code>#include</code>s a concrete module header — it only knows the interface.
+      The UI container and the module are isolated by <code>IVisionModule</code>.
+      The UI container never <code>#include</code>s a concrete module header — it only knows the interface.
     </p>
 
-    <h3>How the shell loads a module</h3>
+    <h3>How the UI container loads a module</h3>
     <pre>
 <span class="cm">// CMainFrame — no product knowledge here</span>
 <span class="kw">void</span> <span class="cls">CMainFrame</span>::RegisterModules()
 {
     m_modules.push_back(std::<span class="kw">make_unique</span>&lt;<span class="cls">CInspectionModule</span>&gt;());
-    <span class="cm">// ← Add any other IVisionModule here</span>
+    <span class="cm">// ← Add any other IVisionModule implementation here</span>
 }
 
 <span class="kw">void</span> <span class="cls">CMainFrame</span>::LoadModule(<span class="cls">IVisionModule</span>* pModule)
 {
-    m_wndTopBar.SetModule(pModule);          <span class="cm">// nav labels come from module</span>
+    m_wndTopBar.SetModule(pModule);           <span class="cm">// nav tab labels come from module</span>
     <span class="kw">for</span> (<span class="kw">int</span> i = <span class="str">0</span>; i &lt; pModule-&gt;GetNavCount(); i++)
         m_moduleViews.push_back(pModule-&gt;CreateView(i, <span class="kw">this</span>, id));
 }</pre>
@@ -470,20 +561,22 @@
     <h3>What each module must provide</h3>
     <div class="tbl-wrap">
     <table>
-      <thead><tr><th>Method</th><th>What it does</th></tr></thead>
+      <thead>
+        <tr><th class="sl">Sl. No</th><th>Method</th><th>What it does</th></tr>
+      </thead>
       <tbody>
-        <tr><td>GetName()</td><td>Display name shown in the title bar</td></tr>
-        <tr><td>GetNavCount()</td><td>How many nav tabs to show in CTopBar</td></tr>
-        <tr><td>GetNavLabel(i)</td><td>Label text for each nav tab pill</td></tr>
-        <tr><td>CreateView(i, parent, id)</td><td>Allocate and return the CWnd for tab i; shell owns lifetime</td></tr>
-        <tr><td>OnConnect() / OnStart() / OnStop()</td><td>Respond to top-bar action buttons</td></tr>
-        <tr><td>IsConnected() / IsRunning()</td><td>State queried by CTopBar to colour action buttons</td></tr>
+        <tr><td class="sl">1</td><td class="mono">GetName()</td><td>Display name shown in the title bar</td></tr>
+        <tr><td class="sl">2</td><td class="mono">GetNavCount()</td><td>Number of nav tab pills to show in CTopBar</td></tr>
+        <tr><td class="sl">3</td><td class="mono">GetNavLabel(i)</td><td>Label text for each nav tab pill</td></tr>
+        <tr><td class="sl">4</td><td class="mono">CreateView(i, parent, id)</td><td>Allocate and return the CWnd for tab i; UI container owns the lifetime</td></tr>
+        <tr><td class="sl">5</td><td class="mono">OnConnect() / OnStart() / OnStop()</td><td>Called when the top-bar action buttons are clicked</td></tr>
+        <tr><td class="sl">6</td><td class="mono">IsConnected() / IsRunning()</td><td>State queried by CTopBar to colour the action buttons</td></tr>
       </tbody>
     </table>
     </div>
 
     <h3>Replacing a module</h3>
-    <p>To swap <code>CInspectionModule</code> for a new product (e.g. a solder paste inspection module):</p>
+    <p>To swap <code>CInspectionModule</code> for a new product (e.g. solder paste inspection):</p>
     <pre>
 <span class="cm">// 1. Write your module</span>
 <span class="kw">class</span> <span class="cls">CSolderPasteModule</span> : <span class="kw">public</span> <span class="cls">IVisionModule</span> { ... };
@@ -491,15 +584,13 @@
 <span class="cm">// 2. Register it in MainFrm.cpp — one line change</span>
 m_modules.push_back(std::<span class="kw">make_unique</span>&lt;<span class="cls">CSolderPasteModule</span>&gt;());
 
-<span class="cm">// 3. Done — the shell auto-wires nav tabs, view switching,</span>
+<span class="cm">// 3. Done — the UI container auto-wires nav tabs, view switching,</span>
 <span class="cm">//    Connect/Start/Stop, pane visibility, and command routing.</span></pre>
 
     <h3>How L4 panes decouple from L2</h3>
     <p>
-      L4 panes never call L2 directly. L2 posts Windows messages to specific pane HWNDs
-      (using the <code>WM_APP+N</code> slots defined in UITheme.h), and panes respond by
-      updating their own display. This means you can add, remove, or reorder panes without
-      modifying L2 at all.
+      L4 panes never call L2 directly. L2 posts Windows messages (<code>WM_APP+N</code>) to pane HWNDs;
+      panes update their own display. Panes can be added or reordered without modifying L2.
     </p>
 
     <div class="flow">
@@ -536,49 +627,53 @@ m_modules.push_back(std::<span class="kw">make_unique</span>&lt;<span class="cls
     <h3>Overall layout</h3>
     <div class="ui-layout">
       <div class="ui-cell c-topbar">
-        <strong>CTopBar</strong>
+        <strong>CTopBar (L1 — UI Container)</strong>
         Dashboard · Results · Recipe · Statistics · Config &nbsp;|&nbsp; Connect · Start · Stop &nbsp;|&nbsp; — □ ✕
       </div>
       <div class="ui-cell c-dashtb">
         <strong>CDashboardToolbar</strong>
-        (Dashboard tab only) Channel selector · Lot ID · Board ID · Save · Apply
+        (Dashboard tab only) &nbsp; Channel selector · Lot ID · Board ID · Save · Apply
       </div>
       <div class="ui-cell c-image">
         <strong>CInspectionImagePane</strong>
         High-res D3D11 image viewer
-        ROI overlay / zoom / pan
+        ROI overlay · zoom · pan
       </div>
       <div class="ui-cell c-center">
-        <strong>Panel List</strong>
-        <strong>Defect Summary</strong>
-        <strong>Stats · Yield Chart</strong>
+        <strong>CPanelListPane</strong>
+        <strong>CDefectSummaryPane</strong>
+        <strong>CStatsPane · CYieldChartPane</strong>
       </div>
       <div class="ui-cell c-main">
-        <strong>Module View</strong>
-        CMonitoringView (Dashboard)
+        <strong>Module View (L2)</strong>
+        CMonitoringView (Dashboard tab)
         or CContentView stubs
         (Results / Recipe / Statistics / Config)
       </div>
       <div class="ui-cell c-defects">
         <strong>CDefectListPane</strong>
-        Defect list with severity,
-        ROI name, coordinates,
-        thumbnail, confidence
+        Defect list · severity · ROI name
+        coordinates · thumbnail · confidence
       </div>
       <div class="ui-cell c-log">
-        <strong>CLoggingPane</strong>
+        <strong>CLoggingPane (always visible)</strong>
         Timestamped log messages from all layers via ILogger / VisionLog::Info()
       </div>
     </div>
 
     <h3>Navigation levels</h3>
-    <p>The UI has two levels of navigation:</p>
     <div class="tbl-wrap">
     <table>
-      <thead><tr><th>Level</th><th>Control</th><th>Tabs</th><th>Effect</th></tr></thead>
+      <thead>
+        <tr><th class="sl">Sl. No</th><th>Level</th><th>Control</th><th>Tabs</th><th>Effect</th></tr>
+      </thead>
       <tbody>
-        <tr><td>L1 — Top nav</td><td>CTopBar pill buttons</td><td>Dashboard · Results · Recipe · Statistics · Config</td><td>Switches entire module view; controls pane visibility</td></tr>
-        <tr><td>L2 — Sub-tabs</td><td>CDashboardTabStrip (inside CMonitoringView)</td><td>Main View · Camera · Light · Inspect</td><td>Switches sub-screen within Dashboard; toggles toolbar and body panes</td></tr>
+        <tr><td class="sl">1</td><td><strong>Level 1 — Top nav</strong></td><td>CTopBar pill buttons</td><td>Dashboard · Results · Recipe · Statistics · Config</td><td>
+          <ul><li>Switches the entire module view</li><li>Controls which side panes are visible</li></ul>
+        </td></tr>
+        <tr><td class="sl">2</td><td><strong>Level 2 — Sub-tabs</strong></td><td>CDashboardTabStrip (inside CMonitoringView)</td><td>Main View · Camera · Light · Inspect</td><td>
+          <ul><li>Switches sub-screen within Dashboard</li><li>Toggles toolbar and body panes</li></ul>
+        </td></tr>
       </tbody>
     </table>
     </div>
@@ -586,16 +681,21 @@ m_modules.push_back(std::<span class="kw">make_unique</span>&lt;<span class="cls
     <h3>Pane visibility rules</h3>
     <div class="tbl-wrap">
     <table>
-      <thead><tr><th>Pane</th><th>When visible</th></tr></thead>
+      <thead>
+        <tr><th class="sl">Sl. No</th><th>Pane</th><th>When visible</th></tr>
+      </thead>
       <tbody>
-        <tr><td>CLoggingPane</td><td>Always</td></tr>
-        <tr><td>CDashboardToolbar (row 2)</td><td>Dashboard nav tab, any sub-tab</td></tr>
-        <tr><td>CInspectionImagePane, CPanelListPane, CDefectSummaryPane, CStatsPane, CYieldChartPane, CDefectListPane</td><td>Dashboard tab AND Main View sub-tab only</td></tr>
-        <tr><td>CModelManagerPane</td><td>Recipe tab only</td></tr>
+        <tr><td class="sl">1</td><td><code>CLoggingPane</code></td><td>Always</td></tr>
+        <tr><td class="sl">2</td><td><code>CDashboardToolbar</code> (second top row)</td><td>Dashboard nav tab — any sub-tab</td></tr>
+        <tr><td class="sl">3</td><td><code>CInspectionImagePane</code>, <code>CPanelListPane</code>, <code>CDefectSummaryPane</code>, <code>CStatsPane</code>, <code>CYieldChartPane</code>, <code>CDefectListPane</code></td><td>Dashboard tab AND Main View sub-tab only</td></tr>
+        <tr><td class="sl">4</td><td><code>CModelManagerPane</code></td><td>Recipe tab only</td></tr>
       </tbody>
     </table>
     </div>
-    <p>Visibility is managed centrally in <code>CMainFrame::UpdatePaneVisibility()</code>, called whenever either nav level changes. Panes call <code>ShowPane(bool, FALSE, FALSE)</code> — they animate in/out without affecting docking layout.</p>
+    <p>
+      Visibility is managed centrally in <code>CMainFrame::UpdatePaneVisibility()</code>, called on every nav change.
+      Each pane calls <code>ShowPane(bool, FALSE, FALSE)</code> — animates in/out without disturbing the dock layout.
+    </p>
   </section>
 
   <!-- ══════════════════════════════════════════════ -->
@@ -603,14 +703,14 @@ m_modules.push_back(std::<span class="kw">make_unique</span>&lt;<span class="cls
     <h2>Dockable Pane Design &amp; Configuration</h2>
 
     <p>
-      All side and bottom panels are <code>CDockablePane</code> subclasses, managed by the MFC
-      extended docking framework (<code>CFrameWndEx</code> + <code>EnableDocking</code>).
+      All side and bottom panels are <code>CDockablePane</code> subclasses managed by the MFC extended docking
+      framework (<code>CFrameWndEx</code> + <code>EnableDocking</code>).
     </p>
 
     <h3>Base class hierarchy</h3>
     <pre>
-CDockablePane  (<span class="cm">MFC</span>)
-  └── CDarkPane           <span class="cm">// dark background, base for all panes</span>
+CDockablePane  (MFC framework)
+  └── CDarkPane           <span class="cm">// dark background; base for all content panes</span>
         ├── CLoggingPane
         ├── CDefectListPane
         ├── CModelManagerPane
@@ -620,34 +720,39 @@ CDockablePane  (<span class="cm">MFC</span>)
         ├── CYieldChartPane
         └── CInspectionImagePane
 
-CDockablePane  (<span class="cm">MFC</span>)
-  ├── CTopBar             <span class="cm">// CanFloat()=FALSE, CanBeResized()=FALSE</span>
-  └── CDashboardToolbar   <span class="cm">// CanFloat()=FALSE</span></pre>
+CDockablePane  (MFC framework)
+  ├── CTopBar             <span class="cm">// CanFloat()=FALSE, CanBeResized()=FALSE — locked to top</span>
+  └── CDashboardToolbar   <span class="cm">// CanFloat()=FALSE — locked to top, Dashboard tab only</span></pre>
 
     <h3>How docking is configured in code</h3>
     <pre>
-<span class="cm">// Example — Image pane docked to left edge, 380px wide</span>
+<span class="cm">// Image pane — docked to left edge, initial size 380 x 600</span>
 m_wndImagePane.Create(_T(<span class="str">"Inspection Image"</span>), <span class="kw">this</span>,
     CRect(<span class="str">0</span>, <span class="str">0</span>, <span class="str">380</span>, <span class="str">600</span>), TRUE, ID_PANE_IMAGE,
     WS_CHILD | WS_VISIBLE | CBRS_LEFT | CBRS_FLOAT_MULTI);
 
-m_wndImagePane.EnableDocking(
-    CBRS_ALIGN_LEFT | CBRS_ALIGN_RIGHT | CBRS_ALIGN_BOTTOM);
-
+m_wndImagePane.EnableDocking(CBRS_ALIGN_LEFT | CBRS_ALIGN_RIGHT | CBRS_ALIGN_BOTTOM);
 DockPane(&amp;m_wndImagePane, AFX_IDW_DOCKBAR_LEFT);</pre>
 
     <h3>What the user can do at runtime</h3>
-    <ul>
-      <li><strong>Drag a pane</strong> by its caption to any edge (left, right, bottom) or float it as a window</li>
-      <li><strong>Tab panes together</strong> by dropping one pane onto another — they become a tabbed group</li>
-      <li><strong>Resize</strong> any pane by dragging the CDarkPaneDivider splitter between panes</li>
-      <li><strong>Minimise</strong> a pane to a thin caption strip along the edge to save screen space</li>
-      <li><strong>Close</strong> a pane (the × on its caption); it can be restored via <code>ShowPane(TRUE)</code> from code</li>
-      <li><strong>Save and restore</strong> layout — MFC serialises dock state automatically via the profile/registry</li>
-    </ul>
+    <div class="tbl-wrap">
+    <table>
+      <thead>
+        <tr><th class="sl">Sl. No</th><th>Action</th><th>How</th></tr>
+      </thead>
+      <tbody>
+        <tr><td class="sl">1</td><td><strong>Move a pane</strong></td><td>Drag the caption to any edge or release to float as a standalone window</td></tr>
+        <tr><td class="sl">2</td><td><strong>Tab panes together</strong></td><td>Drop one pane on top of another — merges into a tabbed group</td></tr>
+        <tr><td class="sl">3</td><td><strong>Resize a pane</strong></td><td>Drag the CDarkPaneDivider splitter bar between adjacent panes</td></tr>
+        <tr><td class="sl">4</td><td><strong>Minimise a pane</strong></td><td>Click the pin icon — collapses to a thin caption strip along the edge</td></tr>
+        <tr><td class="sl">5</td><td><strong>Close a pane</strong></td><td>Click ×; pane is hidden and restored via <code>ShowPane(TRUE, FALSE, FALSE)</code></td></tr>
+        <tr><td class="sl">6</td><td><strong>Save / restore layout</strong></td><td>MFC serialises the entire dock state to the Windows registry automatically</td></tr>
+      </tbody>
+    </table>
+    </div>
 
     <h3>Locking specific panes</h3>
-    <p>The top navigation bar and dashboard toolbar are <strong>locked</strong> — they cannot be floated or resized:</p>
+    <p>The top navigation bar and dashboard toolbar are <strong>locked</strong> — cannot be floated or resized:</p>
     <pre>
 <span class="cm">// In TopBar.h</span>
 <span class="kw">virtual</span> BOOL CanFloat()     <span class="kw">const override</span> { <span class="kw">return</span> FALSE; }
@@ -655,28 +760,32 @@ DockPane(&amp;m_wndImagePane, AFX_IDW_DOCKBAR_LEFT);</pre>
 
     <h3>Adding a new dockable pane</h3>
     <pre>
-<span class="cm">// 1. Create your pane class</span>
+<span class="cm">// Step 1 — Inherit CDarkPane for consistent dark styling</span>
 <span class="kw">class</span> <span class="cls">CMyPane</span> : <span class="kw">public</span> <span class="cls">CDarkPane</span> { ... };
 
-<span class="cm">// 2. Declare member in MainFrm.h</span>
+<span class="cm">// Step 2 — Declare a member in MainFrm.h</span>
 <span class="cls">CMyPane</span> m_wndMyPane;
 
-<span class="cm">// 3. Create + dock in OnCreate()</span>
+<span class="cm">// Step 3 — Create and dock in CMainFrame::OnCreate()</span>
 m_wndMyPane.Create(_T(<span class="str">"My Pane"</span>), <span class="kw">this</span>,
     CRect(<span class="str">0</span>, <span class="str">0</span>, <span class="str">200</span>, <span class="str">300</span>), TRUE, ID_PANE_MINE,
     WS_CHILD | WS_VISIBLE | CBRS_RIGHT | CBRS_FLOAT_MULTI);
 m_wndMyPane.EnableDocking(CBRS_ALIGN_ANY);
 DockPane(&amp;m_wndMyPane);
 
-<span class="cm">// 4. Optionally add visibility rule in UpdatePaneVisibility()</span>
+<span class="cm">// Step 4 — Optionally add a visibility rule</span>
 m_wndMyPane.ShowPane(m_navIndex == Theme::VIEW_RECIPE, FALSE, FALSE);</pre>
 
     <div class="warn">
-      <strong>Pane state persistence:</strong> MFC saves dock positions to the Windows registry automatically via <code>SaveState</code>/<code>LoadState</code>. If you rename a pane's ID or change the docking flags, the saved state may conflict — call <code>CMFCVisualManager::ResetToDefaults()</code> or clear the registry key during development.
+      <strong>Pane state persistence:</strong> MFC saves dock positions to the registry via
+      <code>SaveState</code> / <code>LoadState</code>. If you rename a pane ID or change docking flags,
+      the saved state may conflict — clear the registry key or call <code>CMFCVisualManager::ResetToDefaults()</code> during development.
     </div>
 
-    <div class="note">
-      <strong>Thread safety:</strong> All pane updates must happen on the UI thread. Panes that receive data from worker threads (CLoggingPane, CDefectListPane, CPanelListPane) use <code>PostMessage</code> internally to marshal from the worker thread to the UI thread before touching any UI element.
+    <div class="info">
+      <strong>Thread safety:</strong> All pane UI updates must happen on the UI thread.
+      Panes receiving data from worker threads (CLoggingPane, CDefectListPane, CPanelListPane)
+      use <code>PostMessage</code> internally to marshal calls before touching any UI element.
     </div>
 
   </section>
@@ -684,7 +793,6 @@ m_wndMyPane.ShowPane(m_navIndex == Theme::VIEW_RECIPE, FALSE, FALSE);</pre>
 </div>
 
 <script>
-  // Highlight active nav link on scroll
   const sections = document.querySelectorAll('section[id]');
   const links    = document.querySelectorAll('nav a');
   window.addEventListener('scroll', () => {
