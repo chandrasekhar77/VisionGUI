@@ -1,5 +1,5 @@
 
-// VisionGUI.h : main header file for the VisionGUI application
+// CIS-Platform.h : main header file for the CIS-Platform application
 //
 #pragma once
 
@@ -10,14 +10,14 @@
 #include "resource.h"       // main symbols
 
 
-// CVisionGUIApp:
-// See VisionGUI.cpp for the implementation of this class
+// CCISPlatformApp:
+// See CIS-Platform.cpp for the implementation of this class
 //
 
-class CVisionGUIApp : public CWinApp
+class CCISPlatformApp : public CWinApp
 {
 public:
-	CVisionGUIApp() noexcept;
+	CCISPlatformApp() noexcept;
 
 
 // Overrides
@@ -34,4 +34,4 @@ public:
 	DECLARE_MESSAGE_MAP()
 };
 
-extern CVisionGUIApp theApp;
+extern CCISPlatformApp theApp;

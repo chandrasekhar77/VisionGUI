@@ -1,6 +1,6 @@
 #include "pch.h"
 #include "framework.h"
-#include "VisionGUI.h"
+#include "CIS-Platform.h"
 #include "ContentView.h"
 
 #ifdef _DEBUG

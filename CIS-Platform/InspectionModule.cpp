@@ -11,7 +11,7 @@
 LPCTSTR CInspectionModule::GetNavLabel(int idx) const
 {
 	static const LPCTSTR labels[] = {
-		_T("Dashboard"), _T("Results"), _T("Recipe"), _T("Statistics"), _T("Config")
+		_T("Dashboard"), _T("Teaching"), _T("Recipe"), _T("Statistics"), _T("Config")
 	};
 	return (idx >= 0 && idx < GetNavCount()) ? labels[idx] : _T("");
 }
@@ -27,7 +27,7 @@ CWnd* CInspectionModule::CreateView(int navIndex, CWnd* pParent, UINT nID)
 			CRect(0, 0, 0, 0), pParent, nID);
 		return p;
 	}
-	case 1: { auto* p = new CContentView(); p->Create(_T("Results"),     pParent, nID); return p; }
+	case 1: { auto* p = new CContentView(); p->Create(_T("Teaching"),    pParent, nID); return p; }
 	case 2: { auto* p = new CContentView(); p->Create(_T("Recipe"), pParent, nID); return p; }
 	case 3: { auto* p = new CContentView(); p->Create(_T("Statistics"),  pParent, nID); return p; }
 	case 4: { auto* p = new CContentView(); p->Create(_T("Configuration"), pParent, nID); return p; }

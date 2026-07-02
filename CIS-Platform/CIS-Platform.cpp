@@ -1,12 +1,12 @@
 
-// VisionGUI.cpp : Defines the class behaviors for the application.
+// CIS-Platform.cpp : Defines the class behaviors for the application.
 //
 
 #include "pch.h"
 #include "framework.h"
 #include "afxwinappex.h"
 #include "afxdialogex.h"
-#include "VisionGUI.h"
+#include "CIS-Platform.h"
 #include "MainFrm.h"
 #include "VisionVisualManager.h"
 #include "DarkPaneDivider.h"
@@ -17,16 +17,16 @@
 #endif
 
 
-// CVisionGUIApp
+// CCISPlatformApp
 
-BEGIN_MESSAGE_MAP(CVisionGUIApp, CWinApp)
-	ON_COMMAND(ID_APP_ABOUT, &CVisionGUIApp::OnAppAbout)
+BEGIN_MESSAGE_MAP(CCISPlatformApp, CWinApp)
+	ON_COMMAND(ID_APP_ABOUT, &CCISPlatformApp::OnAppAbout)
 END_MESSAGE_MAP()
 
 
-// CVisionGUIApp construction
+// CCISPlatformApp construction
 
-CVisionGUIApp::CVisionGUIApp() noexcept
+CCISPlatformApp::CCISPlatformApp() noexcept
 {
 
 	// support Restart Manager
@@ -40,20 +40,20 @@ CVisionGUIApp::CVisionGUIApp() noexcept
 
 	// TODO: replace application ID string below with unique ID string; recommended
 	// format for string is CompanyName.ProductName.SubProduct.VersionInformation
-	SetAppID(_T("VisionGUI.AppID.NoVersion"));
+	SetAppID(_T("CIS-Platform.AppID.NoVersion"));
 
 	// TODO: add construction code here,
 	// Place all significant initialization in InitInstance
 }
 
-// The one and only CVisionGUIApp object
+// The one and only CCISPlatformApp object
 
-CVisionGUIApp theApp;
+CCISPlatformApp theApp;
 
 
-// CVisionGUIApp initialization
+// CCISPlatformApp initialization
 
-BOOL CVisionGUIApp::InitInstance()
+BOOL CCISPlatformApp::InitInstance()
 {
 	// InitCommonControlsEx() is required on Windows XP if an application
 	// manifest specifies use of ComCtl32.dll version 6 or later to enable
@@ -112,21 +112,20 @@ BOOL CVisionGUIApp::InitInstance()
 
 
 
-
 	// The one and only window has been initialized, so show and update it
 	pFrame->ShowWindow(SW_SHOW);
 	pFrame->UpdateWindow();
 	return TRUE;
 }
 
-int CVisionGUIApp::ExitInstance()
+int CCISPlatformApp::ExitInstance()
 {
 	AfxOleTerm(FALSE);
 	if (m_gdiplusToken) Gdiplus::GdiplusShutdown(m_gdiplusToken);
 	return CWinApp::ExitInstance();
 }
 
-// CVisionGUIApp message handlers
+// CCISPlatformApp message handlers
 
 
 // CAboutDlg dialog used for App About
@@ -162,13 +161,12 @@ BEGIN_MESSAGE_MAP(CAboutDlg, CDialogEx)
 END_MESSAGE_MAP()
 
 // App command to run the dialog
-void CVisionGUIApp::OnAppAbout()
+void CCISPlatformApp::OnAppAbout()
 {
 	CAboutDlg aboutDlg;
 	aboutDlg.DoModal();
 }
 
-// CVisionGUIApp message handlers
-
+// CCISPlatformApp message handlers
 
 

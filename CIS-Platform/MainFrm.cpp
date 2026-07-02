@@ -4,7 +4,7 @@
 
 #include "pch.h"
 #include "framework.h"
-#include "VisionGUI.h"
+#include "CIS-Platform.h"
 #include "MainFrm.h"
 #include "InspectionModule.h"
 

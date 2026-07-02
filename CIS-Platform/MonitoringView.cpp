@@ -3,7 +3,7 @@
 
 #include "pch.h"
 #include "framework.h"
-#include "VisionGUI.h"
+#include "CIS-Platform.h"
 #include "MonitoringView.h"
 
 #ifdef _DEBUG
